@@ -34,7 +34,12 @@ func game_over() -> void:
 func _on_player_hit(_old_health: int, new_health: int) -> void:
   _hud.update_health(new_health)
 
-func _increase_score() -> void:
+func _on_high_score_loaded(highScore: int) -> void:
+  if not _hud:
+    await self.ready
+  _hud.update_high_score(highScore)
+
+func _on_score_timer_timeout() -> void:
   score += 1
   _hud.update_score(score)
 
@@ -42,7 +47,7 @@ func _on_start_timer_timeout() -> void:
   _mobTimer.start()
   _scoreTimer.start()
 
-func _spawn_new_mob() -> void:
+func _on_mob_timer_timeout() -> void:
   # Create a new instance of the Mob scene.
   var mob: RigidBody2D = mob_scene.instantiate() as RigidBody2D
   assert(mob is RigidBody2D and mob != null, "Mob instance must be of type RigidBody2D")
@@ -67,8 +72,3 @@ func _spawn_new_mob() -> void:
 
   # Spawn the mob by adding it to the Main scene.
   add_child(mob)
-
-func _on_high_score_loaded(highScore: int) -> void:
-  if not _hud:
-    await self.ready
-  _hud.update_high_score(highScore)
