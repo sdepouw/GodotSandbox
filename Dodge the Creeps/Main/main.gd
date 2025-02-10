@@ -55,6 +55,9 @@ func _on_player_hit(_old_health: int, new_health: int) -> void:
   _hud.update_health(new_health)
 
 func _on_high_score_loaded(highScore: int) -> void:
+  # This can get signalled before this node is ready, so we have to
+  # await the 'ready' signal for this node in case this signal fires
+  # ahead of time
   await self.ready
   _hud.update_high_score(highScore)
 
@@ -67,7 +70,6 @@ func _on_start_timer_timeout() -> void:
   _scoreTimer.start()
 
 func _on_mob_timer_timeout() -> void:
-  # Create a new instance of the Mob scene.
   var mob: RigidBody2D = mob_scene.instantiate() as RigidBody2D
   assert(mob is RigidBody2D and mob != null, "Mob instance must be of type RigidBody2D")
 
