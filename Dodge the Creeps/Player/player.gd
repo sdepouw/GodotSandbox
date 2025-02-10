@@ -4,6 +4,7 @@ var player_is_dead: bool = false
 var player_is_invincible: bool = false
 var current_health: int
 var screen_size: Vector2
+var player_size: Vector2
 
 signal hit(old_health: int, new_health: int)
 signal death
@@ -64,7 +65,7 @@ func move_player(delta: float) -> void:
     $AnimatedSprite2D.stop()
 
   position += velocity * delta
-  position = position.clamp(Vector2.ZERO, screen_size)
+  position = position.clamp(Vector2.ZERO + player_size, screen_size - player_size)
 
   if velocity.x != 0:
     $AnimatedSprite2D.animation = "walk"
@@ -80,8 +81,9 @@ func _on_death() -> void:
 
 func _ready() -> void:
   screen_size = get_viewport_rect().size
+  player_size = $CollisionShape2D.shape.get_rect().size * $AnimatedSprite2D.scale
   $AnimationTimer.wait_time = iframe_time
-  #hide()
+  hide()
 
 func _on_animation_timer_timeout() -> void:
   player_is_invincible = false
