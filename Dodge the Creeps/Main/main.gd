@@ -4,6 +4,11 @@ extends Node
 
 var score: int
 var highScore: int
+const saveDataLocation: String = "user://savegame.save"
+
+func _ready() -> void:
+  load_game_data()
+  $HUD.update_high_score(highScore)
 
 func game_over() -> void:
   $ScoreTimer.stop()
@@ -11,9 +16,10 @@ func game_over() -> void:
   $HUD.show_game_over()
   $Music.stop()
   $DeathSound.play()
-  if (score > highScore):
+  if score > highScore:
     highScore = score
     $HUD.update_high_score(highScore)
+    save_game_data()
 
 func new_game() -> void:
   score = 0
@@ -24,6 +30,16 @@ func new_game() -> void:
   $HUD.show_message("Get Ready")
   $Music.play()
   get_tree().call_group("mobs", "queue_free")
+
+func save_game_data() -> void:
+  var save_file: FileAccess = FileAccess.open(saveDataLocation, FileAccess.WRITE)
+  save_file.store_32(self.highScore)
+
+func load_game_data() -> void:
+  if not FileAccess.file_exists(saveDataLocation):
+    return
+  var save_file: FileAccess = FileAccess.open(saveDataLocation, FileAccess.READ)
+  self.highScore = save_file.get_32()
 
 func _on_player_hit(old_health: int, new_health: int) -> void:
   $HUD.update_health(new_health)
