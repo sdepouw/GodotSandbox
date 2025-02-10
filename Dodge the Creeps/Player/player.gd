@@ -42,15 +42,17 @@ func _process(delta: float) -> void:
     $AnimatedSprite2D.animation = "up"
     $AnimatedSprite2D.flip_v = velocity.y > 0
 
+# TODO: We need to continue to take damge on collission, not just on entry
 func _on_body_entered(body: Node2D) -> void:
-  hide() # Player disappears after being hit.
   hit.emit()
-  # Must be deferred: We can't change physics properties on a physica callback.
-  $CollisionShape2D.set_deferred("disabled", true)
+  # TODO: Disable this for a period of invulnerability
+  # $CollisionShape2D.set_deferred("disabled", true)
 
 func start(startPosition: Vector2) -> void:
-  print(startPosition.x)
-  print(startPosition.y)
   position = startPosition
   show()
   $CollisionShape2D.disabled = false
+
+func _on_main_game_over_reached() -> void:
+  $CollisionShape2D.set_deferred("disabled", true)
+  hide()

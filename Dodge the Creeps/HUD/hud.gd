@@ -8,18 +8,18 @@ var defaultMessageText: String
 func _ready() -> void:
   defaultMessageText = $Message.text
 
-func show_message(text: String) -> void:
+func show_message(text: String, temporary: bool = true) -> void:
   $Message.text = text
   $Message.show()
-  $MessageTimer.start()
+  if temporary:
+    $MessageTimer.start()
 
 func show_game_over() -> void:
   show_message("Game Over")
   # Wait until the MesageTimer has counted down.
   await $MessageTimer.timeout
 
-  $Message.text = defaultMessageText
-  $Message.show()
+  show_message(defaultMessageText, false)
 
   # Make a one-shot timer and wait for it to finish.
   await get_tree().create_timer(1.0).timeout
@@ -28,6 +28,8 @@ func show_game_over() -> void:
 func update_score(score: int) -> void:
   $ScoreLabel.text = str(score)
 
+func update_health(health: int) -> void:
+  $HealthLabel.text = str(health)
 
 func _on_start_button_pressed() -> void:
   $StartButton.hide()

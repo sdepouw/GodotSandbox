@@ -13,17 +13,26 @@ events = [SubResource("InputEventAction_e4gk2")]
 script = ExtResource("1_nptqv")
 
 [node name="ScoreLabel" type="Label" parent="."]
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -91.0
-offset_right = 91.0
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -190.0
+offset_right = -8.0
 offset_bottom = 78.0
-grow_horizontal = 2
+grow_horizontal = 0
 theme_override_fonts/font = ExtResource("1_gnwbr")
 theme_override_font_sizes/font_size = 64
 text = "0"
-horizontal_alignment = 1
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="HealthLabel" type="Label" parent="."]
+offset_left = 8.0
+offset_right = 190.0
+offset_bottom = 78.0
+theme_override_fonts/font = ExtResource("1_gnwbr")
+theme_override_font_sizes/font_size = 64
+text = "0"
 vertical_alignment = 1
 
 [node name="Message" type="Label" parent="."]
