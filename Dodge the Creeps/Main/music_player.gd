@@ -7,6 +7,6 @@ extends Node
 func play_stage_music() -> void:
   _stageMusic.play()
 
-func _on_player_death() -> void:
+func play_death_music() -> void:
   _stageMusic.stop()
   _deathMusic.play()

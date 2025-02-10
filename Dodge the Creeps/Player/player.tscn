@@ -97,5 +97,4 @@ libraries = {
 [node name="PlayerDamaged" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_jvgra")
 
-[connection signal="death" from="." to="." method="_on_death"]
 [connection signal="timeout" from="AnimationTimer" to="." method="_on_animation_timer_timeout"]

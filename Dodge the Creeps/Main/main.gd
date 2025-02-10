@@ -23,10 +23,11 @@ func new_game() -> void:
   _musicPlayer.play_stage_music()
   get_tree().call_group("mobs", "queue_free")
 
-func game_over() -> void:
+func _on_player_death() -> void:
   _scoreTimer.stop()
   _mobTimer.stop()
   _hud.show_game_over()
+  _musicPlayer.play_death_music()
   if score > _highScore.get_high_score():
     _hud.update_high_score(score)
     _highScore.save_high_score(score)
@@ -35,8 +36,7 @@ func _on_player_hit(_old_health: int, new_health: int) -> void:
   _hud.update_health(new_health)
 
 func _on_high_score_loaded(highScore: int) -> void:
-  if not _hud:
-    await self.ready
+  await self.ready
   _hud.update_high_score(highScore)
 
 func _on_score_timer_timeout() -> void:

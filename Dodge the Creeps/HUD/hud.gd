@@ -13,7 +13,6 @@ signal start_game
 var defaultMessageText: String
 
 func _ready() -> void:
-  @warning_ignore("unsafe_property_access")
   defaultMessageText = _message.text
 
 func show_message(text: String, temporary: bool = true) -> void:
