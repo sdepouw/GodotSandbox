@@ -31,6 +31,9 @@ func update_score(score: int) -> void:
 func update_health(health: int) -> void:
   $HealthLabel.text = str(health)
 
+func update_high_score(highScore: int) -> void:
+  $HighScoreLabel.text = str(highScore)
+
 func _on_start_button_pressed() -> void:
   $StartButton.hide()
   start_game.emit()

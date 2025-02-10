@@ -3,6 +3,7 @@ extends Node
 @export var mob_scene: PackedScene
 
 var score: int
+var highScore: int
 
 func game_over() -> void:
   $ScoreTimer.stop()
@@ -10,6 +11,9 @@ func game_over() -> void:
   $HUD.show_game_over()
   $Music.stop()
   $DeathSound.play()
+  if (score > highScore):
+    highScore = score
+    $HUD.update_high_score(highScore)
 
 func new_game() -> void:
   score = 0
