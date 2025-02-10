@@ -1,3 +1,4 @@
+class_name HighScore
 extends Node
 
 const _saveDataLocation: String = "user://highscore.dat"

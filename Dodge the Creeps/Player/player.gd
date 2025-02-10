@@ -1,3 +1,4 @@
+class_name Player
 extends Area2D
 
 var player_is_dead: bool = false
@@ -16,11 +17,18 @@ signal death
 ## Length of time (in seconds) Player is invulnerable after taking damage
 @export var iframe_time: float = 1.0
 
+@onready var _animatedSprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var _animationTimer: Timer = $AnimationTimer
+@onready var _collissionShape: CollisionShape2D = $CollisionShape2D
+@onready var _playerDamagedSound: AudioStreamPlayer = $PlayerDamaged
+@onready var _takingDamageAnimation: AnimationPlayer = $TakingDamageAnimation
+
+
 func start(startPosition: Vector2) -> void:
   position = startPosition
   current_health = starting_health
   show()
-  $CollisionShape2D.disabled = false
+  _collissionShape.disabled = false
   player_is_dead = false
 
 func _process(delta: float) -> void:
@@ -43,9 +51,9 @@ func try_take_damage(damage: int = 1) -> void:
     death.emit()
   else:
     player_is_invincible = true
-    $PlayerDamaged.play()
-    $TakingDamageAnimation.play("take_damage")
-    $AnimationTimer.start()
+    _playerDamagedSound.play()
+    _takingDamageAnimation.play("take_damage")
+    _animationTimer.start()
 
 func move_player(delta: float) -> void:
   var velocity: Vector2 = Vector2.ZERO # The player's movement vector.
@@ -61,31 +69,31 @@ func move_player(delta: float) -> void:
   if velocity.length() > 0:
     # Normalizing prevents faster movement with diagonal (i.e. multiple) input.
     velocity = velocity.normalized() * speed
-    $AnimatedSprite2D.play()
+    _animatedSprite.play()
   else:
-    $AnimatedSprite2D.stop()
+    _animatedSprite.stop()
 
   position += velocity * delta
   position = position.clamp(Vector2.ZERO + player_size, screen_size - player_size)
 
   if velocity.x != 0:
-    $AnimatedSprite2D.animation = "walk"
+    _animatedSprite.animation = "walk"
   elif velocity.y != 0:
-    $AnimatedSprite2D.animation = "up"
-  $AnimatedSprite2D.flip_h = velocity.x < 0
-  $AnimatedSprite2D.flip_v = velocity.y > 0
+    _animatedSprite.animation = "up"
+  _animatedSprite.flip_h = velocity.x < 0
+  _animatedSprite.flip_v = velocity.y > 0
 
 func _on_death() -> void:
   player_is_dead = true
-  $CollisionShape2D.set_deferred("disabled", true)
+  _collissionShape.set_deferred("disabled", true)
   hide()
 
 func _ready() -> void:
   screen_size = get_viewport_rect().size
-  player_size = $CollisionShape2D.shape.get_rect().size * $AnimatedSprite2D.scale
-  $AnimationTimer.wait_time = iframe_time
+  player_size = _collissionShape.shape.get_rect().size * _animatedSprite.scale
+  _animationTimer.wait_time = iframe_time
   hide()
 
 func _on_animation_timer_timeout() -> void:
   player_is_invincible = false
-  $TakingDamageAnimation.play("RESET")
+  _takingDamageAnimation.play("RESET")

@@ -4,38 +4,45 @@ extends Node
 
 var score: int
 
-func game_over() -> void:
-  $ScoreTimer.stop()
-  $MobTimer.stop()
-  $HUD.show_game_over()
-  $Music.stop()
-  $DeathSound.play()
-  if score > $HighScore.get_high_score():
-    $HUD.update_high_score(score)
-    $HighScore.save_high_score(score)
+@onready var _highScore: HighScore = $HighScore
+@onready var _hud: HUD = $HUD
+@onready var _mobTimer: Timer = $MobTimer
+@onready var _musicPlayer: MusicPlayer = $MusicPlayer
+@onready var _player: Player = $Player
+@onready var _scoreTimer: Timer = $ScoreTimer
+@onready var _startPosition: Marker2D = $StartPosition
+@onready var _startTimer: Timer = $StartTimer
 
 func new_game() -> void:
   score = 0
-  $Player.start($StartPosition.position)
-  $StartTimer.start()
-  $HUD.update_score(score)
-  $HUD.update_health($Player.current_health)
-  $HUD.show_message("Get Ready")
-  $Music.play()
+  _player.start(_startPosition.position)
+  _startTimer.start()
+  _hud.update_score(score)
+  _hud.update_health(_player.current_health)
+  _hud.show_message("Get Ready")
+  _musicPlayer.play_stage_music()
   get_tree().call_group("mobs", "queue_free")
 
-func _on_player_hit(old_health: int, new_health: int) -> void:
-  $HUD.update_health(new_health)
+func game_over() -> void:
+  _scoreTimer.stop()
+  _mobTimer.stop()
+  _hud.show_game_over()
+  if score > _highScore.get_high_score():
+    _hud.update_high_score(score)
+    _highScore.save_high_score(score)
 
-func _on_score_timer_timeout() -> void:
+func _on_player_hit(_old_health: int, new_health: int) -> void:
+  _hud.update_health(new_health)
+
+func _increase_score() -> void:
   score += 1
-  $HUD.update_score(score)
+  _hud.update_score(score)
 
 func _on_start_timer_timeout() -> void:
-  $MobTimer.start()
-  $ScoreTimer.start()
+  _mobTimer.start()
+  _scoreTimer.start()
 
-func _on_mob_timer_timeout() -> void:
+func _spawn_new_mob() -> void:
   # Create a new instance of the Mob scene.
   var mob: RigidBody2D = mob_scene.instantiate() as RigidBody2D
   assert(mob is RigidBody2D and mob != null, "Mob instance must be of type RigidBody2D")
@@ -62,4 +69,6 @@ func _on_mob_timer_timeout() -> void:
   add_child(mob)
 
 func _on_high_score_loaded(highScore: int) -> void:
-  $HUD.update_high_score(highScore)
+  if not _hud:
+    await self.ready
+  _hud.update_high_score(highScore)

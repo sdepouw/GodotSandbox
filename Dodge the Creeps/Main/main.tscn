@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=4 uid="uid://cfwaqiii2aug6"]
+[gd_scene load_steps=11 format=4 uid="uid://cfwaqiii2aug6"]
 
 [ext_resource type="Script" path="res://Main/main.gd" id="1_qkmvw"]
 [ext_resource type="PackedScene" uid="uid://defaddk4gssm0" path="res://Player/player.tscn" id="1_tafbl"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://doqjjqk0hk7ar" path="res://HUD/hud.tscn" id="4_obw0m"]
 [ext_resource type="AudioStream" uid="uid://deleyv26o53aq" path="res://art/gameover.wav" id="5_3gsew"]
 [ext_resource type="Script" path="res://Main/high_score.gd" id="6_but4w"]
+[ext_resource type="Script" path="res://Main/music_player.gd" id="7_2l7fq"]
 
 [sub_resource type="Curve2D" id="Curve2D_iwypc"]
 _data = {
@@ -55,19 +56,23 @@ curve = SubResource("Curve2D_iwypc")
 
 [node name="HUD" parent="." instance=ExtResource("4_obw0m")]
 
-[node name="Music" type="AudioStreamPlayer" parent="."]
-stream = SubResource("AudioStreamOggVorbis_x8apy")
-
-[node name="DeathSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("5_3gsew")
-
 [node name="HighScore" type="Node" parent="."]
 script = ExtResource("6_but4w")
 
+[node name="MusicPlayer" type="Node" parent="."]
+script = ExtResource("7_2l7fq")
+
+[node name="StageMusic" type="AudioStreamPlayer" parent="MusicPlayer"]
+stream = SubResource("AudioStreamOggVorbis_x8apy")
+
+[node name="DeathMusic" type="AudioStreamPlayer" parent="MusicPlayer"]
+stream = ExtResource("5_3gsew")
+
 [connection signal="death" from="Player" to="." method="game_over"]
+[connection signal="death" from="Player" to="MusicPlayer" method="_on_player_death"]
 [connection signal="hit" from="Player" to="." method="_on_player_hit"]
-[connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
-[connection signal="timeout" from="ScoreTimer" to="." method="_on_score_timer_timeout"]
+[connection signal="timeout" from="MobTimer" to="." method="_spawn_new_mob"]
+[connection signal="timeout" from="ScoreTimer" to="." method="_increase_score"]
 [connection signal="timeout" from="StartTimer" to="." method="_on_start_timer_timeout"]
 [connection signal="start_game" from="HUD" to="." method="new_game"]
 [connection signal="loaded" from="HighScore" to="." method="_on_high_score_loaded"]
