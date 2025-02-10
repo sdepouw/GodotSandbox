@@ -4,6 +4,8 @@ extends Node
 
 var score: int
 
+#region Child Nodes
+
 @onready var _highScore: HighScore = $HighScore
 @onready var _hud: HUD = $HUD
 @onready var _mobTimer: Timer = $MobTimer
@@ -12,6 +14,21 @@ var score: int
 @onready var _scoreTimer: Timer = $ScoreTimer
 @onready var _startPosition: Marker2D = $StartPosition
 @onready var _startTimer: Timer = $StartTimer
+
+func _ensure_children_exist() -> void:
+  assert(_highScore != null)
+  assert(_hud != null)
+  assert(_mobTimer != null)
+  assert(_musicPlayer != null)
+  assert(_player != null)
+  assert(_scoreTimer != null)
+  assert(_startPosition != null)
+  assert(_startTimer != null)
+
+func _ready() -> void:
+  _ensure_children_exist()
+
+#endregion
 
 func new_game() -> void:
   score = 0
@@ -23,7 +40,7 @@ func new_game() -> void:
   _musicPlayer.play_stage_music()
   get_tree().call_group("mobs", "queue_free")
 
-func _on_player_death() -> void:
+func game_over() -> void:
   _scoreTimer.stop()
   _mobTimer.stop()
   _hud.show_game_over()
