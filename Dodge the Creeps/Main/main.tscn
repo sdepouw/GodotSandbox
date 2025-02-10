@@ -34,6 +34,7 @@ grow_vertical = 2
 color = Color(0.440006, 0.0179804, 0.591622, 1)
 
 [node name="Player" parent="." instance=ExtResource("1_tafbl")]
+starting_health = 100
 
 [node name="MobTimer" type="Timer" parent="."]
 wait_time = 0.5

@@ -1,11 +1,9 @@
 extends Area2D
 
-var touching_a_creep: bool = false
 var player_is_dead: bool = false
 var current_health: int
 var screen_size: Vector2
 
-# Will be emitted when a Player collides with an enemy.
 signal hit(old_health: int, new_health: int)
 signal death
 
@@ -19,11 +17,13 @@ func start(startPosition: Vector2) -> void:
   $CollisionShape2D.disabled = false
   player_is_dead = false
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
   move_player(delta)
-  if touching_a_creep:
+  if get_overlapping_bodies().any(is_mob_body):
     take_damage()
+
+func is_mob_body(body: Node2D) -> bool:
+  return body.is_in_group("mobs")
 
 func take_damage(damage: int = 1) -> void:
   if player_is_dead:
@@ -65,15 +65,6 @@ func move_player(delta: float) -> void:
   elif velocity.y != 0:
     $AnimatedSprite2D.animation = "up"
     $AnimatedSprite2D.flip_v = velocity.y > 0
-
-func _on_body_entered(body: Node2D) -> void:
-  take_damage()
-  touching_a_creep = true
-  $CollisionShape2D.set_deferred("disabled", true)
-
-func _on_body_exited(body: Node2D) -> void:
-  touching_a_creep = false
-  $CollisionShape2D.set_deferred("disabled", false)
 
 func _on_death() -> void:
   player_is_dead = true
