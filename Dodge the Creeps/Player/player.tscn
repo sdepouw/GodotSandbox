@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://defaddk4gssm0"]
+[gd_scene load_steps=12 format=3 uid="uid://defaddk4gssm0"]
 
 [ext_resource type="Texture2D" uid="uid://c4u7rputwpeom" path="res://art/playerGrey_up1.png" id="1_ri4pi"]
 [ext_resource type="Script" path="res://Player/player.gd" id="1_sjnjd"]
 [ext_resource type="Texture2D" uid="uid://bhgerjhsok0wg" path="res://art/playerGrey_up2.png" id="2_fke73"]
 [ext_resource type="Texture2D" uid="uid://bodgtlrby7j56" path="res://art/playerGrey_walk1.png" id="3_c8vx8"]
 [ext_resource type="Texture2D" uid="uid://d37syea774uxx" path="res://art/playerGrey_walk2.png" id="4_8d3w1"]
+[ext_resource type="AudioStream" uid="uid://dkqo0r5j71faw" path="res://art/player-damaged.wav" id="6_jvgra"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_b7a11"]
 animations = [{
@@ -92,6 +93,9 @@ libraries = {
 }
 
 [node name="AnimationTimer" type="Timer" parent="."]
+
+[node name="PlayerDamaged" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_jvgra")
 
 [connection signal="death" from="." to="." method="_on_death"]
 [connection signal="timeout" from="AnimationTimer" to="." method="_on_animation_timer_timeout"]

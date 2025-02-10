@@ -43,6 +43,7 @@ func try_take_damage(damage: int = 1) -> void:
     death.emit()
   else:
     player_is_invincible = true
+    $PlayerDamaged.play()
     $TakingDamageAnimation.play("take_damage")
     $AnimationTimer.start()
 
