@@ -59,7 +59,6 @@ func move_player(delta: float) -> void:
   if velocity.length() > 0:
     # Normalizing prevents faster movement with diagonal (i.e. multiple) input.
     velocity = velocity.normalized() * speed
-    # '$' is shorthand for get_node(), but '$' is typed!
     $AnimatedSprite2D.play()
   else:
     $AnimatedSprite2D.stop()
@@ -69,11 +68,10 @@ func move_player(delta: float) -> void:
 
   if velocity.x != 0:
     $AnimatedSprite2D.animation = "walk"
-    $AnimatedSprite2D.flip_v = false
-    $AnimatedSprite2D.flip_h = velocity.x < 0
   elif velocity.y != 0:
     $AnimatedSprite2D.animation = "up"
-    $AnimatedSprite2D.flip_v = velocity.y > 0
+  $AnimatedSprite2D.flip_h = velocity.x < 0
+  $AnimatedSprite2D.flip_v = velocity.y > 0
 
 func _on_death() -> void:
   player_is_dead = true
@@ -83,7 +81,7 @@ func _on_death() -> void:
 func _ready() -> void:
   screen_size = get_viewport_rect().size
   $AnimationTimer.wait_time = iframe_time
-  hide()
+  #hide()
 
 func _on_animation_timer_timeout() -> void:
   player_is_invincible = false
