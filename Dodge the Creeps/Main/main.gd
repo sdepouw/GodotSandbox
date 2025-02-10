@@ -1,12 +1,8 @@
 extends Node
 
 @export var mob_scene: PackedScene
-@export var starting_health: int = 3
-
-signal game_over_reached
 
 var score: int
-var current_health: int
 
 func game_over() -> void:
   $ScoreTimer.stop()
@@ -14,18 +10,19 @@ func game_over() -> void:
   $HUD.show_game_over()
   $Music.stop()
   $DeathSound.play()
-  game_over_reached.emit()
 
 func new_game() -> void:
   score = 0
-  current_health = starting_health;
   $Player.start($StartPosition.position)
   $StartTimer.start()
   $HUD.update_score(score)
-  $HUD.update_health(current_health)
+  $HUD.update_health($Player.current_health)
   $HUD.show_message("Get Ready")
   $Music.play()
   get_tree().call_group("mobs", "queue_free")
+
+func _on_player_hit(old_health: int, new_health: int) -> void:
+  $HUD.update_health(new_health)
 
 func _on_score_timer_timeout() -> void:
   score += 1
@@ -60,9 +57,3 @@ func _on_mob_timer_timeout() -> void:
 
   # Spawn the mob by adding it to the Main scene.
   add_child(mob)
-
-func _on_player_hit() -> void:
-  current_health -= 1
-  $HUD.update_health(current_health)
-  if current_health <= 0:
-    game_over()
