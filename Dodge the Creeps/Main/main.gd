@@ -8,6 +8,7 @@ var score: int
 
 @onready var _highScore: HighScore = $HighScore
 @onready var _hud: HUD = $HUD
+@onready var _mob_spawn_location: MobSpawnLocationPath = $MobPath/MobSpawnLocation
 @onready var _mobTimer: Timer = $MobTimer
 @onready var _musicPlayer: MusicPlayer = $MusicPlayer
 @onready var _player: Player = $Player
@@ -18,6 +19,7 @@ var score: int
 func _ensure_children_exist() -> void:
   assert(_highScore != null)
   assert(_hud != null)
+  assert(_mob_spawn_location != null)
   assert(_mobTimer != null)
   assert(_musicPlayer != null)
   assert(_player != null)
@@ -69,23 +71,7 @@ func _on_mob_timer_timeout() -> void:
   var mob: RigidBody2D = mob_scene.instantiate() as RigidBody2D
   assert(mob is RigidBody2D and mob != null, "Mob instance must be of type RigidBody2D")
 
-  # Choose a random location on Path2D.
-  var mob_spawn_location: PathFollow2D = $MobPath/MobSpawnLocation
-  mob_spawn_location.progress_ratio = randf()
-
-  # Set the mob's direction perpendicular to the path direction.
-  var direction: float = mob_spawn_location.rotation + (PI / 2)
-
-  # Set the mob's position to a random location.
-  mob.position = mob_spawn_location.position
-
-  # Add some randomness to the direction.
-  direction += randf_range(-PI / 4, PI / 4)
-  mob.rotation = direction
-
-  # Choose the velocity for the mob.
-  var velocity: Vector2 = Vector2(randf_range(150.0, 250.0), 0.0)
-  mob.linear_velocity = velocity.rotated(direction)
+  _mob_spawn_location.place_mob_on_path(mob)
 
   # Spawn the mob by adding it to the Main scene.
   add_child(mob)
