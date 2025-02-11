@@ -19,3 +19,7 @@ Added additional features to the base game to experiment with them.
   - Experiment with creating scripts in child nodes, or creating new nodes solely to encapsulate single responsibilities
   - Experiment with Best Practices in terms of sending singals up, calling down, and more complex signal traversal (such as child -> parent -> other child)
   - Other various refactors, experiments, comments, and more
+
+## Dodge the Creeps C#
+
+The same ["First 2D Game" Godot tutorial](https://docs.godotengine.org/en/stable/getting_started/first_2d_game/index.html), implemented using C# for the scripting instead of GDScript.
