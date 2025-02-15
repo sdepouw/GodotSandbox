@@ -23,7 +23,8 @@ window/stretch/mode="canvas_items"
 
 [dotnet]
 
-project/assembly_name="Dodge the Creeps"
+project/assembly_name="DodgeTheCreeps"
+project/solution_directory=".."
 
 [input]
 
