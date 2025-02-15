@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using DodgeTheCreeps.HUDScene;
 using DodgeTheCreeps.MobScene;
 using DodgeTheCreeps.PlayerScene;
@@ -24,6 +23,8 @@ public partial class Main : Node
     GetNode<Timer>("ScoreTimer").Stop();
 
     GetNode<HUD>("HUD").ShowGameOver();
+    GetNode<AudioStreamPlayer2D>("Music").Stop();
+    GetNode<AudioStreamPlayer2D>("DeathSound").Play();
   }
   
   private void NewGame()
@@ -41,6 +42,7 @@ public partial class Main : Node
     hud.ShowMessage("Get Ready!");
     
     GetTree().CallGroup("mobs", Node.MethodName.QueueFree);
+    GetNode<AudioStreamPlayer2D>("Music").Play();
   }
 
   private void OnStartTimerTimeout()
