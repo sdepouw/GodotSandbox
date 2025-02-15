@@ -1,11 +1,11 @@
 # GodotSandbox
 Learning Godot
 
-## Creating First Script
+## Creating First Script (Godot 4.3)
 
 A sandbox project that started from the ["Creating your first script" Godot documentation](https://docs.godotengine.org/en/stable/getting_started/step_by_step/scripting_first_script.html), and a place where I experiment with various things.
 
-## Dodge the Creeps
+## Dodge the Creeps (Godot 4.3)
 
 A complete basic game tutorial from the [Godot documentation](https://docs.godotengine.org/en/stable/getting_started/first_2d_game/index.html). Intend to expand after the basic tutorial is complete.
 
@@ -20,6 +20,8 @@ Added additional features to the base game to experiment with them.
   - Experiment with Best Practices in terms of sending singals up, calling down, and more complex signal traversal (such as child -> parent -> other child)
   - Other various refactors, experiments, comments, and more
 
-## Dodge the Creeps C#
+## Dodge the Creeps C# (Godot 4.4 Beta3)
 
 The same ["First 2D Game" Godot tutorial](https://docs.godotengine.org/en/stable/getting_started/first_2d_game/index.html), implemented using C# for the scripting instead of GDScript.
+
+Godot 4.4 runs .NET 8 for C# projects, instead of .NET 6.
