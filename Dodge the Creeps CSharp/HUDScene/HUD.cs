@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Godot;
 
 namespace DodgeTheCreeps.HUDScene;
@@ -9,13 +8,13 @@ public partial class HUD : CanvasLayer
 
   private string _defaultMessageText = "";
   
-  public override void _Ready() => _defaultMessageText = GetNode<Label>("MessageText").Text;
+  public override void _Ready() => _defaultMessageText = GetNode<Label>("Message").Text;
 
   public override void _Process(double delta)
   {
   }
 
-  private void ShowMessage(string text)
+  public void ShowMessage(string text)
   {
     Label message = GetNode<Label>("Message");
     message.Text = text;
@@ -24,7 +23,8 @@ public partial class HUD : CanvasLayer
     GetNode<Timer>("MessageTimer").Start();
   }
 
-  private async Task ShowGameOver()
+  // TODO: Can't use async Task because the method calling this is invoked by a signal emit, and making that method "async Task" instead of "void" makes the signal not call it 
+  public async void ShowGameOver()
   {
     ShowMessage("Game Over");
     
@@ -38,8 +38,8 @@ public partial class HUD : CanvasLayer
     await ToSignal(GetTree().CreateTimer(1.0), SceneTreeTimer.SignalName.Timeout);
     GetNode<Button>("StartButton").Show();
   }
-  
-  private void UpdateScore(int score) => GetNode<Label>("Score").Text = score.ToString();
+
+  public void UpdateScore(int score) => GetNode<Label>("ScoreLabel").Text = score.ToString();
 
   private void OnStartButtonPressed()
   {

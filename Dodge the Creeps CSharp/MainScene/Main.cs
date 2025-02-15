@@ -1,4 +1,6 @@
 using System;
+using System.Threading.Tasks;
+using DodgeTheCreeps.HUDScene;
 using DodgeTheCreeps.MobScene;
 using DodgeTheCreeps.PlayerScene;
 using Godot;
@@ -16,15 +18,12 @@ public partial class Main : Node
     if (MobScene is null) throw new Exception("Scene not properly set up");
   }
 
-  public override void _Process(double delta)
-  {
-  }
-  
   private void GameOver()
   {
-    GD.Print("WOWSERS");
     GetNode<Timer>("MobTimer").Stop();
     GetNode<Timer>("ScoreTimer").Stop();
+
+    GetNode<HUD>("HUD").ShowGameOver();
   }
   
   private void NewGame()
@@ -36,6 +35,12 @@ public partial class Main : Node
     player.Start(startPosition.Position);
     
     GetNode<Timer>("StartTimer").Start();
+    
+    HUD hud = GetNode<HUD>("HUD");
+    hud.UpdateScore(_score);
+    hud.ShowMessage("Get Ready!");
+    
+    GetTree().CallGroup("mobs", Node.MethodName.QueueFree);
   }
 
   private void OnStartTimerTimeout()
@@ -44,7 +49,11 @@ public partial class Main : Node
     GetNode<Timer>("ScoreTimer").Start();
   }
 
-  private void OnScoreTimerTimeout() => _score++;
+  private void OnScoreTimerTimeout()
+  {
+    _score++;
+    GetNode<HUD>("HUD").UpdateScore(_score);
+  }
 
   private void OnMobTimerTimeout()
   {

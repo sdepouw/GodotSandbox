@@ -80,7 +80,7 @@ public partial class Player : Area2D
     }
   }
 
-  private void OnBodyEntered(Node2D body)
+  private void OnBodyEntered(Node2D _)
   {
     Hide(); // Player disappears after being hit.
     EmitSignal(SignalName.Hit);
