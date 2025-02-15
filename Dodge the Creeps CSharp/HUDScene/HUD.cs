@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Godot;
 
 namespace DodgeTheCreeps.HUDScene;
@@ -23,8 +24,7 @@ public partial class HUD : CanvasLayer
     GetNode<Timer>("MessageTimer").Start();
   }
 
-  // TODO: Can't use async Task because the method calling this is invoked by a signal emit, and making that method "async Task" instead of "void" makes the signal not call it 
-  public async void ShowGameOver()
+  public async Task ShowGameOverAsync()
   {
     ShowMessage("Game Over");
     

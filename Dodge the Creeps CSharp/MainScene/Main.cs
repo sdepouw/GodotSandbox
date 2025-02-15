@@ -17,14 +17,15 @@ public partial class Main : Node
     if (MobScene is null) throw new Exception("Scene not properly set up");
   }
 
-  private void GameOver()
+  // Event handlers must use "async void", else Godot signals won't call them
+  private async void GameOver()
   {
     GetNode<Timer>("MobTimer").Stop();
     GetNode<Timer>("ScoreTimer").Stop();
 
-    GetNode<HUD>("HUD").ShowGameOver();
     GetNode<AudioStreamPlayer2D>("Music").Stop();
     GetNode<AudioStreamPlayer2D>("DeathSound").Play();
+    await GetNode<HUD>("HUD").ShowGameOverAsync();
   }
   
   private void NewGame()
