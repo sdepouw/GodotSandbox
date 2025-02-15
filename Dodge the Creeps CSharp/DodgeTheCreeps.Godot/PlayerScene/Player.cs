@@ -8,6 +8,10 @@ public partial class Player : Area2D
   /// Emitted when a hit is taken.
   /// </summary>
   [Signal] public delegate void HitEventHandler();
+  /// <summary>
+  /// Emitted when the Player dies.
+  /// </summary>
+  [Signal] public delegate void DeathEventHandler();
 
   /// <summary>
   /// How fast the player will move (pixels/sec).
@@ -80,8 +84,8 @@ public partial class Player : Area2D
 
   private void OnBodyEntered(Node2D _)
   {
-    Hide(); // Player disappears after being hit.
-    EmitSignal(SignalName.Hit);
+    Hide(); // Player disappears after dying.
+    EmitSignal(SignalName.Death);
     // Must be deferred as we can't change physics properties on a physics callback.
     _nodes.CollisionShape2D.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
   }
