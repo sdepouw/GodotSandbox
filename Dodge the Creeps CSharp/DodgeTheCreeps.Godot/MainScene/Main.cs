@@ -1,7 +1,5 @@
 using DodgeTheCreeps.Core.Exceptions;
-using DodgeTheCreeps.HUDScene;
 using DodgeTheCreeps.MobScene;
-using DodgeTheCreeps.PlayerScene;
 using Godot;
 
 namespace DodgeTheCreeps.MainScene;

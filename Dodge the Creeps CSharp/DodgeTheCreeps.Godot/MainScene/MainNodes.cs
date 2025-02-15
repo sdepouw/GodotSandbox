@@ -19,7 +19,7 @@ public record MainNodes
   public readonly AudioStreamPlayer2D Music;
   public readonly AudioStreamPlayer2D DeathSound;
 
-  public MainNodes(Node mainNode)
+  public MainNodes(Main mainNode)
   {
     PlayerInstance = mainNode.GetNodeSafe<Player>("Player");
     HUDInstance = mainNode.GetNodeSafe<HUD>("HUD");

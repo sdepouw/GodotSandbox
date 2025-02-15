@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using DodgeTheCreeps.Core.Extensions;
 using Godot;
 
 namespace DodgeTheCreeps.HUDScene;
@@ -14,13 +13,7 @@ public partial class HUD : CanvasLayer
   
   public override void _Ready()
   {
-    _nodes = new()
-    {
-      Message = this.GetNodeSafe<Label>("Message"),
-      MessageTimer = this.GetNodeSafe<Timer>("MessageTimer"),
-      ScoreLabel = this.GetNodeSafe<Label>("ScoreLabel"),
-      StartButton = this.GetNodeSafe<Button>("StartButton")
-    };
+    _nodes = new(this);
     _defaultMessageText = _nodes.Message.Text;
   }
 
