@@ -9,7 +9,7 @@ public partial class Player : Area2D
   /// Emitted when a hit is taken.
   /// </summary>
   [Signal] public delegate void HitEventHandler();
-  
+
   /// <summary>
   /// How fast the player will move (pixels/sec).
   /// </summary>
@@ -24,7 +24,7 @@ public partial class Player : Area2D
   /// Houses all the child nodes of this scene
   /// </summary>
   private PlayerNodes _childNodes = null!;
-  
+
   public override void _Ready()
   {
     _screenSize = GetViewportRect().Size;

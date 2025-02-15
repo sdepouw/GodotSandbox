@@ -1,4 +1,3 @@
-using System;
 using DodgeTheCreeps.Core.Exceptions;
 using DodgeTheCreeps.HUDScene;
 using DodgeTheCreeps.MobScene;
@@ -15,10 +14,11 @@ public partial class Main : Node
 
   public override void _Ready()
   {
-    if (MobScene is null) throw new SceneNotInitializedException<PackedScene>(Name, nameof(MobScene));
+    if (MobScene is null) throw new ScenePropertyNotInitializedException<PackedScene>(Name, nameof(MobScene));
   }
 
-  // Event handlers must use "async void", else Godot signals won't call them
+  // ReSharper disable once AsyncVoidMethod
+  // Event handlers must use "async void" when calling asynchronous code, else Godot signals won't call them.
   private async void GameOver()
   {
     GetNode<Timer>("MobTimer").Stop();
