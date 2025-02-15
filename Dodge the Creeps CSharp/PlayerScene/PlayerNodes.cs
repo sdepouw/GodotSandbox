@@ -10,4 +10,8 @@ namespace DodgeTheCreeps.PlayerScene;
 /// manageable way. Would have to manually maintain this collection, and
 /// manually initialize it in <see cref="Node._Ready" />
 /// </remarks>
-public record PlayerNodes(AnimatedSprite2D AnimatedSprite2D, CollisionShape2D CollisionShape2D);
+public record PlayerNodes
+{
+  public required AnimatedSprite2D AnimatedSprite2D { get; init; }
+  public required CollisionShape2D CollisionShape2D { get; init; }
+}
