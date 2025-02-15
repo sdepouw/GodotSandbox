@@ -19,15 +19,19 @@ public partial class Player : Area2D
   /// </summary>
   private Vector2 _screenSize;
 
-  private PlayerNodes _playerNodes = null!;
+  /// <summary>
+  /// Houses all the child nodes of this scene
+  /// </summary>
+  private PlayerNodes _childNodes = null!;
   
   public override void _Ready()
   {
     _screenSize = GetViewportRect().Size;
-    _playerNodes = new(
-      GetNode<AnimatedSprite2D>("AnimatedSprite2D"),
-      GetNode<CollisionShape2D>("CollisionShape2D")
-    );
+    _childNodes = new()
+    {
+      AnimatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D"),
+      CollisionShape2D = GetNode<CollisionShape2D>("CollisionShape2D")
+    };
     Hide();
   }
 
@@ -52,16 +56,14 @@ public partial class Player : Area2D
       velocity.Y -= 1;
     }
 
-    AnimatedSprite2D animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-
     if (velocity.Length() > 0)
     {
       velocity = velocity.Normalized() * Speed;
-      animatedSprite2D.Play();
+      _childNodes.AnimatedSprite2D.Play();
     }
     else
     {
-      animatedSprite2D.Stop();
+      _childNodes.AnimatedSprite2D.Stop();
     }
 
     Position += velocity * (float)delta;
@@ -69,14 +71,14 @@ public partial class Player : Area2D
 
     if (velocity.X != 0)
     {
-      animatedSprite2D.Animation = "walk";
-      animatedSprite2D.FlipV = false;
-      animatedSprite2D.FlipH = velocity.X < 0;
+      _childNodes.AnimatedSprite2D.Animation = "walk";
+      _childNodes.AnimatedSprite2D.FlipV = false;
+      _childNodes.AnimatedSprite2D.FlipH = velocity.X < 0;
     }
     else if (velocity.Y != 0)
     {
-      animatedSprite2D.Animation = "up";
-      animatedSprite2D.FlipV = velocity.Y > 0;
+      _childNodes.AnimatedSprite2D.Animation = "up";
+      _childNodes.AnimatedSprite2D.FlipV = velocity.Y > 0;
     }
   }
 
@@ -85,13 +87,13 @@ public partial class Player : Area2D
     Hide(); // Player disappears after being hit.
     EmitSignal(SignalName.Hit);
     // Must be deferred as we can't change physics properties on a physics callback.
-    _playerNodes.CollisionShape2D.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+    _childNodes.CollisionShape2D.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
   }
 
   public void Start(Vector2 position)
   {
     Position = position;
     Show();
-    _playerNodes.CollisionShape2D.Disabled = false;
+    _childNodes.CollisionShape2D.Disabled = false;
   }
 }
