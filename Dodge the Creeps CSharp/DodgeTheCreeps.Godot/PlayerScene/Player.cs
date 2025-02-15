@@ -23,12 +23,12 @@ public partial class Player : Area2D
   /// <summary>
   /// Houses all the child nodes of this scene
   /// </summary>
-  private PlayerNodes _childNodes = null!;
+  private PlayerNodes _nodes = null!;
 
   public override void _Ready()
   {
     _screenSize = GetViewportRect().Size;
-    _childNodes = new()
+    _nodes = new()
     {
       AnimatedSprite2D = this.GetNodeSafe<AnimatedSprite2D>("AnimatedSprite2D"),
       CollisionShape2D = this.GetNodeSafe<CollisionShape2D>("CollisionShape2D")
@@ -60,11 +60,11 @@ public partial class Player : Area2D
     if (velocity.Length() > 0)
     {
       velocity = velocity.Normalized() * Speed;
-      _childNodes.AnimatedSprite2D.Play();
+      _nodes.AnimatedSprite2D.Play();
     }
     else
     {
-      _childNodes.AnimatedSprite2D.Stop();
+      _nodes.AnimatedSprite2D.Stop();
     }
 
     Position += velocity * (float)delta;
@@ -72,14 +72,14 @@ public partial class Player : Area2D
 
     if (velocity.X != 0)
     {
-      _childNodes.AnimatedSprite2D.Animation = "walk";
-      _childNodes.AnimatedSprite2D.FlipV = false;
-      _childNodes.AnimatedSprite2D.FlipH = velocity.X < 0;
+      _nodes.AnimatedSprite2D.Animation = "walk";
+      _nodes.AnimatedSprite2D.FlipV = false;
+      _nodes.AnimatedSprite2D.FlipH = velocity.X < 0;
     }
     else if (velocity.Y != 0)
     {
-      _childNodes.AnimatedSprite2D.Animation = "up";
-      _childNodes.AnimatedSprite2D.FlipV = velocity.Y > 0;
+      _nodes.AnimatedSprite2D.Animation = "up";
+      _nodes.AnimatedSprite2D.FlipV = velocity.Y > 0;
     }
   }
 
@@ -88,13 +88,13 @@ public partial class Player : Area2D
     Hide(); // Player disappears after being hit.
     EmitSignal(SignalName.Hit);
     // Must be deferred as we can't change physics properties on a physics callback.
-    _childNodes.CollisionShape2D.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+    _nodes.CollisionShape2D.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
   }
 
   public void Start(Vector2 position)
   {
     Position = position;
     Show();
-    _childNodes.CollisionShape2D.Disabled = false;
+    _nodes.CollisionShape2D.Disabled = false;
   }
 }

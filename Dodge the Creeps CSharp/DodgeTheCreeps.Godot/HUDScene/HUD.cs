@@ -10,28 +10,28 @@ public partial class HUD : CanvasLayer
 
   private string _defaultMessageText = "";
 
-  private HUDNodes _childNodes = null!;
+  private HUDNodes _nodes = null!;
   
   public override void _Ready()
   {
-    _childNodes = new()
+    _nodes = new()
     {
       Message = this.GetNodeSafe<Label>("Message"),
       MessageTimer = this.GetNodeSafe<Timer>("MessageTimer"),
       ScoreLabel = this.GetNodeSafe<Label>("ScoreLabel"),
       StartButton = this.GetNodeSafe<Button>("StartButton")
     };
-    _defaultMessageText = _childNodes.Message.Text;
+    _defaultMessageText = _nodes.Message.Text;
   }
 
   public void ShowMessage(string text, bool autoTimeout = true)
   {
-    _childNodes.Message.Text = text;
-    _childNodes.Message.Show();
+    _nodes.Message.Text = text;
+    _nodes.Message.Show();
 
     if (autoTimeout)
     {
-      _childNodes.MessageTimer.Start();  
+      _nodes.MessageTimer.Start();  
     }
   }
 
@@ -39,21 +39,21 @@ public partial class HUD : CanvasLayer
   {
     ShowMessage("Game Over");
 
-    await ToSignal(_childNodes.MessageTimer, Timer.SignalName.Timeout);
+    await ToSignal(_nodes.MessageTimer, Timer.SignalName.Timeout);
 
     ShowMessage(_defaultMessageText, false);
 
     await ToSignal(GetTree().CreateTimer(1.0), SceneTreeTimer.SignalName.Timeout);
-    _childNodes.StartButton.Show();
+    _nodes.StartButton.Show();
   }
 
   public void UpdateScore(int score) => GetNode<Label>("ScoreLabel").Text = score.ToString();
 
   private void OnStartButtonPressed()
   {
-    _childNodes.StartButton.Hide();
+    _nodes.StartButton.Hide();
     EmitSignal(SignalName.StartGame);
   }
 
-  private void OnMessageTimerTimeout() => _childNodes.Message.Hide();
+  private void OnMessageTimerTimeout() => _nodes.Message.Hide();
 }
