@@ -11,52 +11,51 @@ public partial class Main : Node
   [Export] public PackedScene MobScene { get; set; } = null!;
 
   private int _score;
+  private MainNodes _nodes = null!;
 
   public override void _Ready()
   {
     if (MobScene is null) throw new ScenePropertyNotInitializedException<PackedScene>(Name, nameof(MobScene));
+    _nodes = new(this);
   }
 
   // ReSharper disable once AsyncVoidMethod
   // Event handlers must use "async void" when calling asynchronous code, else Godot signals won't call them.
   private async void GameOver()
   {
-    GetNode<Timer>("MobTimer").Stop();
-    GetNode<Timer>("ScoreTimer").Stop();
+    _nodes.MobTimer.Stop();
+    _nodes.ScoreTimer.Stop();
 
-    GetNode<AudioStreamPlayer2D>("Music").Stop();
-    GetNode<AudioStreamPlayer2D>("DeathSound").Play();
-    await GetNode<HUD>("HUD").ShowGameOverAsync();
+    _nodes.Music.Stop();
+    _nodes.DeathSound.Play();
+    await _nodes.HUDInstance.ShowGameOverAsync();
   }
 
   private void NewGame()
   {
     _score = 0;
 
-    Player player = GetNode<Player>("Player");
-    Marker2D startPosition = GetNode<Marker2D>("StartPosition");
-    player.Start(startPosition.Position);
+    _nodes.PlayerInstance.Start(_nodes.StartPosition.Position);
 
-    GetNode<Timer>("StartTimer").Start();
+    _nodes.StartTimer.Start();
 
-    HUD hud = GetNode<HUD>("HUD");
-    hud.UpdateScore(_score);
-    hud.ShowMessage("Get Ready!");
+    _nodes.HUDInstance.UpdateScore(_score);
+    _nodes.HUDInstance.ShowMessage("Get Ready!");
 
     GetTree().CallGroup("mobs", Node.MethodName.QueueFree);
-    GetNode<AudioStreamPlayer2D>("Music").Play();
+    _nodes.Music.Play();
   }
 
   private void OnStartTimerTimeout()
   {
-    GetNode<Timer>("MobTimer").Start();
-    GetNode<Timer>("ScoreTimer").Start();
+    _nodes.MobTimer.Start();
+    _nodes.ScoreTimer.Start();
   }
 
   private void OnScoreTimerTimeout()
   {
     _score++;
-    GetNode<HUD>("HUD").UpdateScore(_score);
+    _nodes.HUDInstance.UpdateScore(_score);
   }
 
   private void OnMobTimerTimeout()
@@ -65,14 +64,13 @@ public partial class Main : Node
     Mob mob = MobScene.Instantiate<Mob>();
 
     // Choose a random location on Path2D.
-    PathFollow2D mobSpawnLocation = GetNode<PathFollow2D>("MobPath/MobSpawnLocation");
-    mobSpawnLocation.ProgressRatio = GD.Randf();
+    _nodes.MobSpawnLocation.ProgressRatio = GD.Randf();
 
     // Set the mob's direction perpendicular to the path direction.
-    float direction = mobSpawnLocation.Rotation + Mathf.Pi / 2;
+    float direction = _nodes.MobSpawnLocation.Rotation + Mathf.Pi / 2;
 
     // Set the mob's position to a random location.
-    mob.Position = mobSpawnLocation.Position;
+    mob.Position = _nodes.MobSpawnLocation.Position;
 
     // Add some randomness to the direction.
     direction += (float)GD.RandRange(-Mathf.Pi / 4, Mathf.Pi / 4);
