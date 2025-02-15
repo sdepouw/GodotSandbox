@@ -1,7 +1,7 @@
-﻿using DodgeTheCreeps.Exceptions;
+﻿using DodgeTheCreeps.Core.Exceptions;
 using Godot;
 
-namespace DodgeTheCreeps.Extensions;
+namespace DodgeTheCreeps.Core.Extensions;
 
 public static class NodeExtensions
 {

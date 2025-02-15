@@ -1,5 +1,5 @@
 using System;
-using DodgeTheCreeps.Exceptions;
+using DodgeTheCreeps.Core.Exceptions;
 using DodgeTheCreeps.HUDScene;
 using DodgeTheCreeps.MobScene;
 using DodgeTheCreeps.PlayerScene;

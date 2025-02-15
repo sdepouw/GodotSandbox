@@ -1,4 +1,4 @@
-using DodgeTheCreeps.Extensions;
+using DodgeTheCreeps.Core.Extensions;
 using Godot;
 
 namespace DodgeTheCreeps.PlayerScene;
