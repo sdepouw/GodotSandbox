@@ -12,7 +12,7 @@ public partial class Main : Node
   [Export] public PackedScene MobScene { get; set; } = null!;
 
   private int _score;
-  
+
   public override void _Ready()
   {
     if (MobScene is null) throw new SceneNotInitializedException<PackedScene>(Name, nameof(MobScene));
@@ -28,21 +28,21 @@ public partial class Main : Node
     GetNode<AudioStreamPlayer2D>("DeathSound").Play();
     await GetNode<HUD>("HUD").ShowGameOverAsync();
   }
-  
+
   private void NewGame()
   {
     _score = 0;
-    
+
     Player player = GetNode<Player>("Player");
     Marker2D startPosition = GetNode<Marker2D>("StartPosition");
     player.Start(startPosition.Position);
-    
+
     GetNode<Timer>("StartTimer").Start();
-    
+
     HUD hud = GetNode<HUD>("HUD");
     hud.UpdateScore(_score);
     hud.ShowMessage("Get Ready!");
-    
+
     GetTree().CallGroup("mobs", Node.MethodName.QueueFree);
     GetNode<AudioStreamPlayer2D>("Music").Play();
   }
@@ -63,7 +63,7 @@ public partial class Main : Node
   {
     // Create a new instance of the Mob scene.
     Mob mob = MobScene.Instantiate<Mob>();
-    
+
     // Choose a random location on Path2D.
     PathFollow2D mobSpawnLocation = GetNode<PathFollow2D>("MobPath/MobSpawnLocation");
     mobSpawnLocation.ProgressRatio = GD.Randf();

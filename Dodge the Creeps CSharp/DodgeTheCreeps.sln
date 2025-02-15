@@ -1,6 +1,6 @@
 ﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DodgeTheCreeps", "DodgeTheCreeps.csproj", "{1DF6BE0B-82C0-4F39-AC46-CF3A393F2562}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DodgeTheCreeps", "DodgeTheCreeps.Godot\DodgeTheCreeps.csproj", "{1DF6BE0B-82C0-4F39-AC46-CF3A393F2562}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
