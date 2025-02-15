@@ -1,3 +1,4 @@
+using DodgeTheCreeps.Extensions;
 using Godot;
 
 namespace DodgeTheCreeps.PlayerScene;
@@ -29,8 +30,8 @@ public partial class Player : Area2D
     _screenSize = GetViewportRect().Size;
     _childNodes = new()
     {
-      AnimatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D"),
-      CollisionShape2D = GetNode<CollisionShape2D>("CollisionShape2D")
+      AnimatedSprite2D = this.GetNodeSafe<AnimatedSprite2D>("AnimatedSprite2D"),
+      CollisionShape2D = this.GetNodeSafe<CollisionShape2D>("CollisionShape2D")
     };
     Hide();
   }

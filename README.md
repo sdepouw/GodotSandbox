@@ -7,7 +7,7 @@ A sandbox project that started from the ["Creating your first script" Godot docu
 
 ## Dodge the Creeps (Godot 4.3)
 
-A complete basic game tutorial from the [Godot documentation](https://docs.godotengine.org/en/stable/getting_started/first_2d_game/index.html). Intend to expand after the basic tutorial is complete.
+A complete basic game tutorial from the [Godot documentation](https://docs.godotengine.org/en/stable/getting_started/first_2d_game/index.html).
 
 ### Enhancements
 
@@ -25,3 +25,8 @@ Added additional features to the base game to experiment with them.
 The same ["First 2D Game" Godot tutorial](https://docs.godotengine.org/en/stable/getting_started/first_2d_game/index.html), implemented using C# for the scripting instead of GDScript.
 
 Godot 4.4 runs .NET 8 for C# projects, instead of .NET 6.
+
+### Enhancements (Planned)
+
+- Instead of one hit instant death, the player can now take multiple hits (3 by default)
+- High Score is now maintained, and persists between play sessions

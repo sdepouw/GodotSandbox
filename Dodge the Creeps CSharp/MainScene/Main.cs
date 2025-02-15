@@ -1,4 +1,5 @@
 using System;
+using DodgeTheCreeps.Exceptions;
 using DodgeTheCreeps.HUDScene;
 using DodgeTheCreeps.MobScene;
 using DodgeTheCreeps.PlayerScene;
@@ -14,7 +15,7 @@ public partial class Main : Node
   
   public override void _Ready()
   {
-    if (MobScene is null) throw new Exception("Scene not properly set up");
+    if (MobScene is null) throw new SceneNotInitializedException<PackedScene>(Name, nameof(MobScene));
   }
 
   // Event handlers must use "async void", else Godot signals won't call them
