@@ -18,6 +18,7 @@ public record MainNodes
   public readonly PathFollow2D MobSpawnLocation;
   public readonly AudioStreamPlayer2D Music;
   public readonly AudioStreamPlayer2D DeathSound;
+  public readonly HighScore HighScore;
 
   public MainNodes(Main mainNode)
   {
@@ -32,5 +33,6 @@ public record MainNodes
     MobSpawnLocation = MobPath.GetNodeSafe<PathFollow2D>("MobSpawnLocation");
     Music = mainNode.GetNodeSafe<AudioStreamPlayer2D>("Music");
     DeathSound = mainNode.GetNodeSafe<AudioStreamPlayer2D>("DeathSound");
+    HighScore = mainNode.GetNodeSafe<HighScore>("HighScore");
   }
 }

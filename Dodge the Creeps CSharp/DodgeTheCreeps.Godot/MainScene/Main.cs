@@ -35,16 +35,29 @@ public partial class Main : Node
 
   private void OnHit(int _, int newHealth) => _nodes.HUDInstance.UpdateHealth(newHealth);
 
-  // ReSharper disable once AsyncVoidMethod
-  // Event handlers must use "async void" when calling asynchronous code, else Godot signals won't call them.
-  private async void GameOver()
+  private void GameOver()
   {
     _nodes.MobTimer.Stop();
     _nodes.ScoreTimer.Stop();
 
     _nodes.Music.Stop();
     _nodes.DeathSound.Play();
-    await _nodes.HUDInstance.ShowGameOverAsync();
+    // We want the HUD to asynchronously do things while we continue, so we don't declare this signal handler
+    // as "async void" and do not "await" this async method call.
+    _ = _nodes.HUDInstance.ShowGameOverAsync();
+    if (_score > _nodes.HighScore.Value)
+    {
+      _nodes.HUDInstance.UpdateHighScore(_score);
+      _nodes.HighScore.SaveHighScore(_score);
+    }
+  }
+
+  // ReSharper disable once AsyncVoidMethod (Signal handler must be async void)
+  private async void OnHighScoreLoaded(int highScore)
+  {
+    // This can get signalled before this node is ready, so we must await the "ready" signal
+    await ToSignal(this, Node.SignalName.Ready);
+    _nodes.HUDInstance.UpdateHighScore(highScore);
   }
 
   private void OnStartTimerTimeout()
