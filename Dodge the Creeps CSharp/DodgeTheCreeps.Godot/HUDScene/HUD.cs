@@ -34,6 +34,7 @@ public partial class HUD : CanvasLayer
     }
   }
 
+  // TODO: Show "Congrats!" message if high score was beaten. Separate from main message (so it persists until new game.)
   public async Task ShowGameOverAsync()
   {
     ShowMessage("Game Over");
