@@ -72,14 +72,14 @@ public partial class HUD : CanvasLayer
 
   public void UpdateHighScore(int highScore, bool highlight = false)
   {
-    _nodes.HighScoreLabel.Text = highScore.ToString("D5");
-    _nodes.HighScoreLabel.ApplyHighlight(highlight, ScoreHighlightColor);
+    _nodes.HighScoreLabelInstance.Text = highScore.ToString("D5");
+    _nodes.HighScoreLabelInstance.ApplyHighlight(highlight, ScoreHighlightColor);
   }
   
   public void ClearHighlighting()
   {
     _nodes.ScoreLabel.ClearHighlight();
-    _nodes.HighScoreLabel.ClearHighlight();
+    _nodes.HighScoreLabelInstance.ClearHighlight();
   }
 
   private void OnStartButtonPressed()
