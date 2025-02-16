@@ -26,7 +26,8 @@ The same ["First 2D Game" Godot tutorial](https://docs.godotengine.org/en/stable
 
 Godot 4.4 runs .NET 8 for C# projects, instead of .NET 6.
 
-### Enhancements (Planned)
+### Enhancements
 
 - Instead of one hit instant death, the player can now take multiple hits (3 by default)
+  - Includes "take damage" sound
 - High Score is now maintained, and persists between play sessions

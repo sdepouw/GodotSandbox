@@ -1,8 +1,5 @@
-using System;
 using DodgeTheCreeps.Core.Exceptions;
-using DodgeTheCreeps.HUDScene;
 using DodgeTheCreeps.MobScene;
-using DodgeTheCreeps.PlayerScene;
 using Godot;
 
 namespace DodgeTheCreeps.MainScene;
@@ -12,51 +9,67 @@ public partial class Main : Node
   [Export] public PackedScene MobScene { get; set; } = null!;
 
   private int _score;
+  private MainNodes _nodes = null!;
 
   public override void _Ready()
   {
-    if (MobScene is null) throw new SceneNotInitializedException<PackedScene>(Name, nameof(MobScene));
-  }
-
-  // Event handlers must use "async void", else Godot signals won't call them
-  private async void GameOver()
-  {
-    GetNode<Timer>("MobTimer").Stop();
-    GetNode<Timer>("ScoreTimer").Stop();
-
-    GetNode<AudioStreamPlayer2D>("Music").Stop();
-    GetNode<AudioStreamPlayer2D>("DeathSound").Play();
-    await GetNode<HUD>("HUD").ShowGameOverAsync();
+    if (MobScene is null) throw new ScenePropertyNotInitializedException<PackedScene>(Name, nameof(MobScene));
+    _nodes = new(this);
   }
 
   private void NewGame()
   {
     _score = 0;
 
-    Player player = GetNode<Player>("Player");
-    Marker2D startPosition = GetNode<Marker2D>("StartPosition");
-    player.Start(startPosition.Position);
+    _nodes.PlayerInstance.Start(_nodes.StartPosition.Position);
 
-    GetNode<Timer>("StartTimer").Start();
+    _nodes.StartTimer.Start();
 
-    HUD hud = GetNode<HUD>("HUD");
-    hud.UpdateScore(_score);
-    hud.ShowMessage("Get Ready!");
+    _nodes.HUDInstance.UpdateScore(_score);
+    _nodes.HUDInstance.UpdateHealth(_nodes.PlayerInstance.StartingHealth, _nodes.PlayerInstance.StartingHealth);
+    _nodes.HUDInstance.ShowMessage("Get Ready!");
 
-    GetTree().CallGroup("mobs", Node.MethodName.QueueFree);
-    GetNode<AudioStreamPlayer2D>("Music").Play();
+    GetTree().CallGroup(MobSceneGroups.Mobs.Name, Node.MethodName.QueueFree);
+    _nodes.Music.Play();
+  }
+
+  private void OnHit(int _, int newHealth) => _nodes.HUDInstance.UpdateHealth(newHealth);
+
+  private void GameOver()
+  {
+    _nodes.MobTimer.Stop();
+    _nodes.ScoreTimer.Stop();
+
+    _nodes.Music.Stop();
+    _nodes.DeathSound.Play();
+    // We want the HUD to asynchronously do things while we continue, so we don't declare this signal handler
+    // as "async void" and do not "await" this async method call.
+    _ = _nodes.HUDInstance.ShowGameOverAsync();
+    if (_score > _nodes.HighScore.Value)
+    {
+      _nodes.HUDInstance.UpdateHighScore(_score);
+      _nodes.HighScore.SaveHighScore(_score);
+    }
+  }
+
+  // ReSharper disable once AsyncVoidMethod (Signal handler must be async void)
+  private async void OnHighScoreLoaded(int highScore)
+  {
+    // This can get signalled before this node is ready, so we must await the "ready" signal
+    await ToSignal(this, Node.SignalName.Ready);
+    _nodes.HUDInstance.UpdateHighScore(highScore);
   }
 
   private void OnStartTimerTimeout()
   {
-    GetNode<Timer>("MobTimer").Start();
-    GetNode<Timer>("ScoreTimer").Start();
+    _nodes.MobTimer.Start();
+    _nodes.ScoreTimer.Start();
   }
 
   private void OnScoreTimerTimeout()
   {
     _score++;
-    GetNode<HUD>("HUD").UpdateScore(_score);
+    _nodes.HUDInstance.UpdateScore(_score);
   }
 
   private void OnMobTimerTimeout()
@@ -65,14 +78,13 @@ public partial class Main : Node
     Mob mob = MobScene.Instantiate<Mob>();
 
     // Choose a random location on Path2D.
-    PathFollow2D mobSpawnLocation = GetNode<PathFollow2D>("MobPath/MobSpawnLocation");
-    mobSpawnLocation.ProgressRatio = GD.Randf();
+    _nodes.MobSpawnLocation.ProgressRatio = GD.Randf();
 
     // Set the mob's direction perpendicular to the path direction.
-    float direction = mobSpawnLocation.Rotation + Mathf.Pi / 2;
+    float direction = _nodes.MobSpawnLocation.Rotation + Mathf.Pi / 2;
 
     // Set the mob's position to a random location.
-    mob.Position = mobSpawnLocation.Position;
+    mob.Position = _nodes.MobSpawnLocation.Position;
 
     // Add some randomness to the direction.
     direction += (float)GD.RandRange(-Mathf.Pi / 4, Mathf.Pi / 4);

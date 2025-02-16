@@ -1,4 +1,6 @@
-using DodgeTheCreeps.Core.Extensions;
+using System;
+using System.Linq;
+using DodgeTheCreeps.MobScene;
 using Godot;
 
 namespace DodgeTheCreeps.PlayerScene;
@@ -8,12 +10,24 @@ public partial class Player : Area2D
   /// <summary>
   /// Emitted when a hit is taken.
   /// </summary>
-  [Signal] public delegate void HitEventHandler();
-  
+  [Signal] public delegate void HitEventHandler(int oldHealth, int currentHealth);
+  /// <summary>
+  /// Emitted when the Player dies.
+  /// </summary>
+  [Signal] public delegate void DeathEventHandler();
+
   /// <summary>
   /// How fast the player will move (pixels/sec).
   /// </summary>
   [Export] public int Speed { get; set; } = 400;
+  /// <summary>
+  /// How many hits the player can take before dying.
+  /// </summary>
+  [Export] public int StartingHealth { get; set; } = 3;
+  /// <summary>
+  /// The length of time the player is invulnerable when taking damage.
+  /// </summary>
+  [Export] public double InvulnerabilityOnHitTime { get; set; } = 1.0;
 
   /// <summary>
   /// Size of the game window
@@ -23,20 +37,40 @@ public partial class Player : Area2D
   /// <summary>
   /// Houses all the child nodes of this scene
   /// </summary>
-  private PlayerNodes _childNodes = null!;
-  
+  private PlayerNodes _nodes = null!;
+
+  private int _currentHealth;
+  private bool _playerIsDead;
+  private bool _playerIsInvulnerable;
+
   public override void _Ready()
   {
+    _nodes = new(this);
     _screenSize = GetViewportRect().Size;
-    _childNodes = new()
-    {
-      AnimatedSprite2D = this.GetNodeSafe<AnimatedSprite2D>("AnimatedSprite2D"),
-      CollisionShape2D = this.GetNodeSafe<CollisionShape2D>("CollisionShape2D")
-    };
+    _nodes.TakingDamageAnimationTimer.WaitTime = InvulnerabilityOnHitTime;
     Hide();
   }
 
   public override void _Process(double delta)
+  {
+    MovePlayer(delta);
+    if (GetOverlappingBodies().Any(body => body.IsInGroup(MobSceneGroups.Mobs.Name)))
+    {
+      TryTakeDamage();
+    }
+  }
+
+  public void Start(Vector2 position)
+  {
+    _currentHealth = StartingHealth;
+    _playerIsDead = false;
+    _playerIsInvulnerable = false;
+    _nodes.PlayerCollisionShape.Disabled = false;
+    Position = position;
+    Show();
+  }
+
+  private void MovePlayer(double delta)
   {
     Vector2 velocity = Vector2.Zero; // The player's movement vector.
 
@@ -60,11 +94,11 @@ public partial class Player : Area2D
     if (velocity.Length() > 0)
     {
       velocity = velocity.Normalized() * Speed;
-      _childNodes.AnimatedSprite2D.Play();
+      _nodes.PlayerSprite.Play();
     }
     else
     {
-      _childNodes.AnimatedSprite2D.Stop();
+      _nodes.PlayerSprite.Stop();
     }
 
     Position += velocity * (float)delta;
@@ -72,29 +106,46 @@ public partial class Player : Area2D
 
     if (velocity.X != 0)
     {
-      _childNodes.AnimatedSprite2D.Animation = "walk";
-      _childNodes.AnimatedSprite2D.FlipV = false;
-      _childNodes.AnimatedSprite2D.FlipH = velocity.X < 0;
+      _nodes.PlayerSprite.Animation = "walk";
+      _nodes.PlayerSprite.FlipV = false;
+      _nodes.PlayerSprite.FlipH = velocity.X < 0;
     }
     else if (velocity.Y != 0)
     {
-      _childNodes.AnimatedSprite2D.Animation = "up";
-      _childNodes.AnimatedSprite2D.FlipV = velocity.Y > 0;
+      _nodes.PlayerSprite.Animation = "up";
+      _nodes.PlayerSprite.FlipV = velocity.Y > 0;
     }
   }
 
-  private void OnBodyEntered(Node2D _)
+  private void TryTakeDamage(int damage = 1)
   {
-    Hide(); // Player disappears after being hit.
-    EmitSignal(SignalName.Hit);
-    // Must be deferred as we can't change physics properties on a physics callback.
-    _childNodes.CollisionShape2D.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+    if (_playerIsDead || _playerIsInvulnerable) return;
+    int oldHealth = _currentHealth;
+    _currentHealth = Math.Clamp(_currentHealth - damage, 0, StartingHealth);
+    EmitSignalHit(oldHealth, _currentHealth);
+    if (_currentHealth == 0)
+    {
+      EmitSignalDeath();
+    }
+    else
+    {
+      _playerIsInvulnerable = true;
+      _nodes.PlayerDamagedSound.Play();
+      _nodes.TakingDamageAnimation.Play("take_damage");
+      _nodes.TakingDamageAnimationTimer.Start();
+    }
   }
 
-  public void Start(Vector2 position)
+  private void OnTakingDamageAnimationTimerTimeout()
   {
-    Position = position;
-    Show();
-    _childNodes.CollisionShape2D.Disabled = false;
+    _playerIsInvulnerable = false;
+    _nodes.TakingDamageAnimation.Play("RESET");
+  }
+
+  private void OnDeath()
+  {
+    _playerIsDead = true;
+    _nodes.PlayerCollisionShape.Disabled = true;
+    Hide();
   }
 }

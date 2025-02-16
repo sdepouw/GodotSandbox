@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=4 uid="uid://ddi2awu4rtamg"]
+[gd_scene load_steps=10 format=4 uid="uid://ddi2awu4rtamg"]
 
 [ext_resource type="Script" uid="uid://d2amdjvfqtgm3" path="res://MainScene/Main.cs" id="1_a4dpf"]
 [ext_resource type="PackedScene" uid="uid://db3mvim78fu3w" path="res://MobScene/Mob.tscn" id="2_14jvh"]
 [ext_resource type="PackedScene" uid="uid://dgtxkop6maxov" path="res://PlayerScene/Player.tscn" id="3_y0u1s"]
 [ext_resource type="PackedScene" uid="uid://btig2n7gr72ag" path="res://HUDScene/HUD.tscn" id="4_01c5a"]
 [ext_resource type="AudioStream" uid="uid://56yfrcrjo3qa" path="res://art/gameover.wav" id="5_5jhbl"]
+[ext_resource type="Script" uid="uid://cnxrqscu0k22v" path="res://MainScene/HighScore.cs" id="6_qt16b"]
 
 [sub_resource type="Curve2D" id="Curve2D_vpkxb"]
 _data = {
@@ -60,8 +61,13 @@ stream = SubResource("AudioStreamOggVorbis_axewk")
 [node name="DeathSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("5_5jhbl")
 
-[connection signal="Hit" from="Player" to="." method="GameOver"]
+[node name="HighScore" type="Node" parent="."]
+script = ExtResource("6_qt16b")
+
+[connection signal="Death" from="Player" to="." method="GameOver"]
+[connection signal="Hit" from="Player" to="." method="OnHit"]
 [connection signal="timeout" from="MobTimer" to="." method="OnMobTimerTimeout"]
 [connection signal="timeout" from="ScoreTimer" to="." method="OnScoreTimerTimeout"]
 [connection signal="timeout" from="StartTimer" to="." method="OnStartTimerTimeout"]
 [connection signal="StartGame" from="HUD" to="." method="NewGame"]
+[connection signal="Loaded" from="HighScore" to="." method="OnHighScoreLoaded"]

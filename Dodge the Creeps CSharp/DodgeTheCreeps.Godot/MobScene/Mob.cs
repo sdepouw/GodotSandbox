@@ -4,11 +4,13 @@ namespace DodgeTheCreeps.MobScene;
 
 public partial class Mob : RigidBody2D
 {
+  private MobNodes _nodes = null!;
+
   public override void _Ready()
   {
-    AnimatedSprite2D animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-    string[] mobTypes = animatedSprite2D.SpriteFrames.GetAnimationNames();
-    animatedSprite2D.Play(mobTypes[GD.Randi() % mobTypes.Length]);
+    _nodes = new(this);
+    string[] mobTypes = _nodes.AnimatedSprite2D.SpriteFrames.GetAnimationNames();
+    _nodes.AnimatedSprite2D.Play(mobTypes[GD.Randi() % mobTypes.Length]);
   }
 
   private void OnVisibleOnScreenNotifier2DScreenExited() => QueueFree();
