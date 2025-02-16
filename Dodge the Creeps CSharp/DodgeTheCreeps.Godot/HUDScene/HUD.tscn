@@ -27,7 +27,7 @@ text = "00000"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="HighScoreLabel" parent="." instance=ExtResource("3_lent8")]
+[node name="HighScoreAnimatedLabel" parent="." instance=ExtResource("3_lent8")]
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -40,7 +40,7 @@ grow_horizontal = 2
 grow_vertical = 0
 text = "00000"
 
-[node name="HealthLabel" parent="." instance=ExtResource("3_lent8")]
+[node name="HealthAnimatedLabel" parent="." instance=ExtResource("3_lent8")]
 offset_left = 5.0
 offset_right = 158.0
 offset_bottom = 49.0
@@ -123,6 +123,7 @@ text = "Clear"
 wait_time = 2.0
 one_shot = true
 
+[connection signal="AnimationFinished" from="HighScoreAnimatedLabel" to="." method="OnHighScoreAnimationFinished"]
 [connection signal="pressed" from="StartButton" to="." method="OnStartButtonPressed"]
 [connection signal="pressed" from="ClearHighScoreButton" to="." method="OnClearButtonPressed"]
 [connection signal="timeout" from="MessageTimer" to="." method="OnMessageTimerTimeout"]

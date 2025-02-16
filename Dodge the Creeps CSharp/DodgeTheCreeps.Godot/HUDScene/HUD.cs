@@ -20,7 +20,7 @@ public partial class HUD : CanvasLayer
   {
     _nodes = new(this);
     _defaultMessageText = _nodes.Message.Text;
-    _nodes.HealthLabelInstance.Hide();
+    _nodes.HealthAnimatedLabelInstance.Hide();
     _nodes.HighScoreBeatenMessage.Hide();
   }
 
@@ -43,7 +43,7 @@ public partial class HUD : CanvasLayer
     }
     ShowMessage("Game Over");
     await ToSignal(_nodes.MessageTimer, Timer.SignalName.Timeout);
-    _nodes.HealthLabelInstance.Hide();
+    _nodes.HealthAnimatedLabelInstance.Hide();
     ShowMessage(_defaultMessageText, false);
 
     await ToSignal(GetTree().CreateTimer(1.0), SceneTreeTimer.SignalName.Timeout);
@@ -54,13 +54,13 @@ public partial class HUD : CanvasLayer
   public void InitializeHealth(int health, int maxHealth)
   {
     _maxHealth = maxHealth;
-    _nodes.HealthLabelInstance.Text = $"{health}/{maxHealth} HP";
+    _nodes.HealthAnimatedLabelInstance.Text = $"{health}/{maxHealth} HP";
   }
 
   public void UpdateHealth(int health)
   {
     InitializeHealth(health, _maxHealth);
-    _nodes.HealthLabelInstance.ShakeRed();
+    _nodes.HealthAnimatedLabelInstance.ShakeRed();
   }
 
   public void UpdateScore(int score, bool highlight = false)
@@ -71,14 +71,14 @@ public partial class HUD : CanvasLayer
 
   public void UpdateHighScore(int highScore, bool highlight = false)
   {
-    _nodes.HighScoreLabelInstance.Text = highScore.ToString("D5");
-    _nodes.HighScoreLabelInstance.ApplyHighlight(highlight, ScoreHighlightColor);
+    _nodes.HighScoreAnimatedLabelInstance.Text = highScore.ToString("D5");
+    _nodes.HighScoreAnimatedLabelInstance.ApplyHighlight(highlight, ScoreHighlightColor);
   }
   
   public void ClearHighlighting()
   {
     _nodes.ScoreLabel.ClearHighlight();
-    _nodes.HighScoreLabelInstance.ClearHighlight();
+    _nodes.HighScoreAnimatedLabelInstance.ClearHighlight();
   }
 
   private void OnStartButtonPressed()
@@ -86,16 +86,19 @@ public partial class HUD : CanvasLayer
     _nodes.StartButton.Hide();
     _nodes.ClearHighScoreButton.Hide();
     _nodes.HighScoreBeatenMessage.Hide();
-    _nodes.HealthLabelInstance.Show();
+    _nodes.HealthAnimatedLabelInstance.Show();
     EmitSignalStartGame();
   }
 
   private void OnClearButtonPressed()
   {
     ClearHighlighting();
-    _nodes.HighScoreLabelInstance.ShakeRed();
+    _nodes.HighScoreAnimatedLabelInstance.ShakeRed();
     EmitSignalClearHighScore();
+    _nodes.ClearHighScoreButton.SetDisabled(true);
   }
 
   private void OnMessageTimerTimeout() => _nodes.Message.Hide();
+  
+  private void OnHighScoreAnimationFinished() => _nodes.ClearHighScoreButton.SetDisabled(false);
 }
