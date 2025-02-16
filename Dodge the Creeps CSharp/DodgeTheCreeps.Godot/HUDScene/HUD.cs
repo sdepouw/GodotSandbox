@@ -14,13 +14,14 @@ public partial class HUD : CanvasLayer
 
   private HUDNodes _nodes = null!;
 
-  private int _maxHealth = 0;
+  private int _maxHealth;
 
   public override void _Ready()
   {
     _nodes = new(this);
     _defaultMessageText = _nodes.Message.Text;
     _nodes.HealthLabel.Hide();
+    _nodes.HighScoreBeatenMessage.Hide();
   }
 
   public void ShowMessage(string text, bool autoTimeout = true)
@@ -34,11 +35,13 @@ public partial class HUD : CanvasLayer
     }
   }
 
-  // TODO: Show "Congrats!" message if high score was beaten. Separate from main message (so it persists until new game.)
-  public async Task ShowGameOverAsync()
+  public async Task ShowGameOverAsync(bool highScoreBeaten)
   {
+    if (highScoreBeaten)
+    {
+      _nodes.HighScoreBeatenMessage.Show();
+    }
     ShowMessage("Game Over");
-
     await ToSignal(_nodes.MessageTimer, Timer.SignalName.Timeout);
     _nodes.HealthLabel.Hide();
     ShowMessage(_defaultMessageText, false);
@@ -83,6 +86,7 @@ public partial class HUD : CanvasLayer
   {
     _nodes.StartButton.Hide();
     _nodes.ClearHighScoreButton.Hide();
+    _nodes.HighScoreBeatenMessage.Hide();
     _nodes.HealthLabel.Show();
     EmitSignalStartGame();
   }

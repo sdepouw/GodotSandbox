@@ -43,10 +43,12 @@ public partial class Main : Node
 
     _nodes.Music.Stop();
     _nodes.DeathSound.Play();
+    bool highScoreBeaten = _nodes.HighScore.Beaten(_score);
     // We want the HUD to asynchronously do things while we continue, so we don't declare this signal handler
     // as "async void" and do not "await" this async method call.
-    _ = _nodes.HUDInstance.ShowGameOverAsync();
-    if (_nodes.HighScore.Beaten(_score))
+    _ = _nodes.HUDInstance.ShowGameOverAsync(highScoreBeaten);
+    
+    if (highScoreBeaten)
     {
       _nodes.HighScore.SaveHighScore(_score);
     }
