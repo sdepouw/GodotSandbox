@@ -148,7 +148,7 @@ public partial class Player : Area2D
     // TODO: Must this be deferred now? OnDeath is not a physics callback. Let's try.
     _nodes.PlayerCollisionShape.Disabled = true;
     // Must be deferred as we can't change physics properties on a physics callback.
-    //_nodes.CollisionShape2D.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+    //_nodes.PlayerCollisionShape.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
     Hide();
   }
 }

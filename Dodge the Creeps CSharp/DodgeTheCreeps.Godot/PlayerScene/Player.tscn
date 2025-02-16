@@ -65,7 +65,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.02, 0.04, 0.06, 0.08, 0.1, 0.12),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
 "update": 1,
-"values": [Color(1, 1, 1, 0.501961), Color(1, 1, 1, 1), Color(1, 1, 1, 0.501961), Color(1, 1, 1, 1), Color(1, 1, 1, 0.501961), Color(1, 1, 1, 1), Color(1, 1, 1, 0.501961)]
+"values": [Color(1, 1, 1, 0.5), Color(1, 1, 1, 1), Color(1, 1, 1, 0.5), Color(1, 1, 1, 1), Color(1, 1, 1, 0.5), Color(1, 1, 1, 1), Color(1, 1, 1, 0.5)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_57dqw"]
@@ -96,4 +96,5 @@ stream = ExtResource("6_m5chr")
 
 [node name="TakingDamageAnimationTimer" type="Timer" parent="."]
 
+[connection signal="Death" from="." to="." method="OnDeath"]
 [connection signal="timeout" from="TakingDamageAnimationTimer" to="." method="OnTakingDamageAnimationTimerTimeout"]
