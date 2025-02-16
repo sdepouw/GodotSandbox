@@ -79,7 +79,7 @@ public partial class HUD : CanvasLayer
     _nodes.HighScoreAnimatedLabelInstance.Text = highScore.ToString("D5");
     _nodes.HighScoreAnimatedLabelInstance.ApplyHighlight(highlight, ScoreHighlightColor);
   }
-  
+
   public void ClearHighlighting()
   {
     _nodes.ScoreLabel.ClearHighlight();
@@ -104,6 +104,6 @@ public partial class HUD : CanvasLayer
   }
 
   private void OnMessageTimerTimeout() => _nodes.Message.Hide();
-  
+
   private void OnHighScoreFlashAnimationFinished() => _nodes.ClearHighScoreButton.SetDisabled(false);
 }

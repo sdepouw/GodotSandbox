@@ -47,7 +47,7 @@ public partial class Main : Node
     // We want the HUD to asynchronously do things while we continue, so we don't declare this signal handler
     // as "async void" and do not "await" this async method call.
     _ = _nodes.HUDInstance.ShowGameOverAsync(highScoreBeaten);
-    
+
     if (highScoreBeaten)
     {
       _nodes.HighScore.SaveHighScore(_score);

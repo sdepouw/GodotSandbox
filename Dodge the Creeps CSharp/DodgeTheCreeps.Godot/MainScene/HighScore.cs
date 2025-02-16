@@ -20,12 +20,12 @@ public partial class HighScore : Node
       EmitSignalLoaded(Value);
     }
   }
-  
+
   /// <summary>
   /// Whether the given score beats the current high score
   /// </summary>
   public bool Beaten(int score) => score > Value;
-  
+
   public void SaveHighScore(int newHighScore)
   {
     Value = newHighScore;

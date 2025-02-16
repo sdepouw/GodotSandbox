@@ -14,11 +14,11 @@ public static class LabelExtensions
       if (!label.HasThemeColorOverride("font_color"))
       {
         label.AddThemeColorOverride("font_color", color);
-      }  
+      }
     }
     else
     {
-      label.ClearHighlight();  
+      label.ClearHighlight();
     }
   }
 
@@ -29,7 +29,7 @@ public static class LabelExtensions
   {
     if (label.HasThemeColorOverride("font_color"))
     {
-      label.RemoveThemeColorOverride("font_color");  
+      label.RemoveThemeColorOverride("font_color");
     }
   }
 }
