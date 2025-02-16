@@ -10,6 +10,7 @@ public record HUDNodes
   public readonly Label HighScoreLabel;
   public readonly Label Message;
   public readonly Button StartButton;
+  public readonly Button ClearHighScoreButton;
   public readonly Timer MessageTimer;
 
   public HUDNodes(HUD hud)
@@ -19,6 +20,7 @@ public record HUDNodes
     HighScoreLabel = hud.GetNodeSafe<Label>("HighScoreLabel");
     Message = hud.GetNodeSafe<Label>("Message");
     StartButton = hud.GetNodeSafe<Button>("StartButton");
+    ClearHighScoreButton = hud.GetNodeSafe<Button>("ClearHighScoreButton");
     MessageTimer = hud.GetNodeSafe<Timer>("MessageTimer");
   }
 }

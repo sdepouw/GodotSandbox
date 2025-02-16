@@ -52,6 +52,12 @@ public partial class Main : Node
     }
   }
 
+  private void ClearHighScore()
+  {
+    _nodes.HighScore.Clear();
+    _nodes.HUDInstance.UpdateHighScore(_nodes.HighScore.Value);
+  }
+
   // ReSharper disable once AsyncVoidMethod (Signal handler must be async void)
   private async void OnHighScoreLoaded(int highScore)
   {

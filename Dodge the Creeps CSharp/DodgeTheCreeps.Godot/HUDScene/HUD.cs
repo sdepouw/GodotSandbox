@@ -6,8 +6,9 @@ namespace DodgeTheCreeps.HUDScene;
 
 public partial class HUD : CanvasLayer
 {
-  [Export] public Color ScoreHighlightColor { get; set; } = Colors.Green;
   [Signal] public delegate void StartGameEventHandler();
+  [Signal] public delegate void ClearHighScoreEventHandler();
+  [Export] public Color ScoreHighlightColor { get; set; } = Colors.Green;
 
   private string _defaultMessageText = "";
 
@@ -43,6 +44,7 @@ public partial class HUD : CanvasLayer
 
     await ToSignal(GetTree().CreateTimer(1.0), SceneTreeTimer.SignalName.Timeout);
     _nodes.StartButton.Show();
+    _nodes.ClearHighScoreButton.Show();
   }
 
   public void UpdateHealth(int health, int? maxHealth = null)
@@ -69,19 +71,27 @@ public partial class HUD : CanvasLayer
     _nodes.HighScoreLabel.Text = highScore.ToString("D5");
     _nodes.HighScoreLabel.ApplyHighlight(highlight, ScoreHighlightColor);
   }
-
-  private void OnStartButtonPressed()
-  {
-    _nodes.StartButton.Hide();
-    _nodes.HealthLabel.Show();
-    EmitSignal(SignalName.StartGame);
-  }
-
-  private void OnMessageTimerTimeout() => _nodes.Message.Hide();
-
+  
   public void ClearHighlighting()
   {
     _nodes.ScoreLabel.ClearHighlight();
     _nodes.HighScoreLabel.ClearHighlight();
   }
+
+  private void OnStartButtonPressed()
+  {
+    _nodes.StartButton.Hide();
+    _nodes.ClearHighScoreButton.Hide();
+    _nodes.HealthLabel.Show();
+    EmitSignalStartGame();
+  }
+
+  private void OnClearButtonPressed()
+  {
+    ClearHighlighting();
+    // TODO: Flash red (turn red, then fade back to the normal color).
+    EmitSignalClearHighScore();
+  }
+
+  private void OnMessageTimerTimeout() => _nodes.Message.Hide();
 }

@@ -69,5 +69,6 @@ script = ExtResource("6_qt16b")
 [connection signal="timeout" from="MobTimer" to="." method="OnMobTimerTimeout"]
 [connection signal="timeout" from="ScoreTimer" to="." method="OnScoreTimerTimeout"]
 [connection signal="timeout" from="StartTimer" to="." method="OnStartTimerTimeout"]
+[connection signal="ClearHighScore" from="HUD" to="." method="ClearHighScore"]
 [connection signal="StartGame" from="HUD" to="." method="NewGame"]
 [connection signal="Loaded" from="HighScore" to="." method="OnHighScoreLoaded"]
