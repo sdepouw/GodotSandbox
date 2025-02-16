@@ -20,7 +20,7 @@ public partial class HUD : CanvasLayer
   {
     _nodes = new(this);
     _defaultMessageText = _nodes.Message.Text;
-    _nodes.HealthLabel.Hide();
+    _nodes.HealthLabelInstance.Hide();
     _nodes.HighScoreBeatenMessage.Hide();
   }
 
@@ -43,7 +43,7 @@ public partial class HUD : CanvasLayer
     }
     ShowMessage("Game Over");
     await ToSignal(_nodes.MessageTimer, Timer.SignalName.Timeout);
-    _nodes.HealthLabel.Hide();
+    _nodes.HealthLabelInstance.Hide();
     ShowMessage(_defaultMessageText, false);
 
     await ToSignal(GetTree().CreateTimer(1.0), SceneTreeTimer.SignalName.Timeout);
@@ -61,7 +61,7 @@ public partial class HUD : CanvasLayer
     {
       maxHealth = _maxHealth;
     }
-    _nodes.HealthLabel.Text = $"{health}/{maxHealth} HP";
+    _nodes.HealthLabelInstance.Text = $"{health}/{maxHealth} HP";
   }
 
   public void UpdateScore(int score, bool highlight = false)
@@ -87,7 +87,7 @@ public partial class HUD : CanvasLayer
     _nodes.StartButton.Hide();
     _nodes.ClearHighScoreButton.Hide();
     _nodes.HighScoreBeatenMessage.Hide();
-    _nodes.HealthLabel.Show();
+    _nodes.HealthLabelInstance.Show();
     EmitSignalStartGame();
   }
 

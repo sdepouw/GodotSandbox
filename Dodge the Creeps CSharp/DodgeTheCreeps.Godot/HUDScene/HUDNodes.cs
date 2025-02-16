@@ -5,7 +5,8 @@ namespace DodgeTheCreeps.HUDScene;
 
 public record HUDNodes
 {
-  public readonly Label HealthLabel;
+  public readonly AnimatedLabel HealthLabelInstance;
+  
   public readonly Label ScoreLabel;
   public readonly Label HighScoreLabel;
   public readonly Label Message;
@@ -16,7 +17,8 @@ public record HUDNodes
 
   public HUDNodes(HUD hud)
   {
-    HealthLabel = hud.GetNodeSafe<Label>("HealthLabel");
+    HealthLabelInstance = hud.GetNodeSafe<AnimatedLabel>("HealthLabel");
+    
     ScoreLabel = hud.GetNodeSafe<Label>("ScoreLabel");
     HighScoreLabel = hud.GetNodeSafe<Label>("HighScoreLabel");
     Message = hud.GetNodeSafe<Label>("Message");
