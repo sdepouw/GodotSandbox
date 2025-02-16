@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 namespace DodgeTheCreeps.PlayerScene;
@@ -17,6 +18,10 @@ public partial class Player : Area2D
   /// How fast the player will move (pixels/sec).
   /// </summary>
   [Export] public int Speed { get; set; } = 400;
+  /// <summary>
+  /// How many hits the player can take before dying.
+  /// </summary>
+  [Export] public int StartingHealth { get; set; } = 3;
 
   /// <summary>
   /// Size of the game window
@@ -27,6 +32,8 @@ public partial class Player : Area2D
   /// Houses all the child nodes of this scene
   /// </summary>
   private PlayerNodes _nodes = null!;
+
+  private int _currentHealth;
 
   public override void _Ready()
   {
@@ -84,6 +91,10 @@ public partial class Player : Area2D
 
   private void OnBodyEntered(Node2D _)
   {
+    _currentHealth = Math.Max(_currentHealth - 1, 0);
+    if (_currentHealth > 0) return;
+    
+    // TODO: Make player blink and be invulnerable during that time.
     Hide(); // Player disappears after dying.
     EmitSignal(SignalName.Death);
     // Must be deferred as we can't change physics properties on a physics callback.
@@ -92,6 +103,7 @@ public partial class Player : Area2D
 
   public void Start(Vector2 position)
   {
+    _currentHealth = StartingHealth;
     Position = position;
     Show();
     _nodes.CollisionShape2D.Disabled = false;
