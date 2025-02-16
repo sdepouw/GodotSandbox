@@ -19,4 +19,13 @@ public static class NodeExtensions
     if (childNode == null) throw new NodeNotFoundException(node, path);
     return childNode;
   }
+
+  /// <summary>
+  /// Creates a one-shot <see cref="Godot.Timer" /> that lasts for <paramref name="timeSec" />
+  /// before calling <see cref="Godot.Timer.EmitSignalTimeout" />, then disposing itself.
+  /// </summary>
+  public static SignalAwaiter OneShotTimer(this Node node, double timeSec)
+  {
+    return node.ToSignal(node.GetTree().CreateTimer(timeSec), SceneTreeTimer.SignalName.Timeout);
+  }
 }
