@@ -16,6 +16,24 @@ public partial class Main : Node
     if (MobScene is null) throw new ScenePropertyNotInitializedException<PackedScene>(Name, nameof(MobScene));
     _nodes = new(this);
   }
+  
+  private void NewGame()
+  {
+    _score = 0;
+
+    _nodes.PlayerInstance.Start(_nodes.StartPosition.Position);
+
+    _nodes.StartTimer.Start();
+
+    _nodes.HUDInstance.UpdateScore(_score);
+    _nodes.HUDInstance.UpdateHealth(_nodes.PlayerInstance.StartingHealth, _nodes.PlayerInstance.StartingHealth);
+    _nodes.HUDInstance.ShowMessage("Get Ready!");
+
+    GetTree().CallGroup(MobSceneGroups.Mobs.Name, Node.MethodName.QueueFree);
+    _nodes.Music.Play();
+  }
+
+  private void OnHit(int _, int newHealth) => _nodes.HUDInstance.UpdateHealth(newHealth);
 
   // ReSharper disable once AsyncVoidMethod
   // Event handlers must use "async void" when calling asynchronous code, else Godot signals won't call them.
@@ -27,21 +45,6 @@ public partial class Main : Node
     _nodes.Music.Stop();
     _nodes.DeathSound.Play();
     await _nodes.HUDInstance.ShowGameOverAsync();
-  }
-
-  private void NewGame()
-  {
-    _score = 0;
-
-    _nodes.PlayerInstance.Start(_nodes.StartPosition.Position);
-
-    _nodes.StartTimer.Start();
-
-    _nodes.HUDInstance.UpdateScore(_score);
-    _nodes.HUDInstance.ShowMessage("Get Ready!");
-
-    GetTree().CallGroup(MobSceneGroups.Mobs.Name, Node.MethodName.QueueFree);
-    _nodes.Music.Play();
   }
 
   private void OnStartTimerTimeout()

@@ -61,6 +61,7 @@ stream = SubResource("AudioStreamOggVorbis_axewk")
 stream = ExtResource("5_5jhbl")
 
 [connection signal="Death" from="Player" to="." method="GameOver"]
+[connection signal="Hit" from="Player" to="." method="OnHit"]
 [connection signal="timeout" from="MobTimer" to="." method="OnMobTimerTimeout"]
 [connection signal="timeout" from="ScoreTimer" to="." method="OnScoreTimerTimeout"]
 [connection signal="timeout" from="StartTimer" to="." method="OnStartTimerTimeout"]
