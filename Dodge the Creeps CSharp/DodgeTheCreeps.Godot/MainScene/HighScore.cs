@@ -1,6 +1,5 @@
-using System;
-using System.IO;
 using Godot;
+using FileAccess = Godot.FileAccess;
 
 namespace DodgeTheCreeps.MainScene;
 
@@ -17,7 +16,8 @@ public partial class HighScore : Node
   public void SaveHighScore(int newHighScore)
   {
     Value = newHighScore;
-    File.WriteAllBytes(SaveDataLocation, BitConverter.GetBytes(Value));
+    using FileAccess saveFile = FileAccess.Open(SaveDataLocation, FileAccess.ModeFlags.Write);
+    saveFile.Store32((uint)Value);
   }
 
   public override void _Ready()
@@ -30,8 +30,9 @@ public partial class HighScore : Node
   
   private bool LoadHighScore()
   {
-    if (!File.Exists(SaveDataLocation)) return false;
-    Value = BitConverter.ToInt32(File.ReadAllBytes(SaveDataLocation));
+    if (!FileAccess.FileExists(SaveDataLocation)) return false;
+    using FileAccess saveFile = FileAccess.Open(SaveDataLocation, FileAccess.ModeFlags.Read);
+    Value = (int)saveFile.Get32();
     return true;
   }
 }
