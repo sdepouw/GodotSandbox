@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://btig2n7gr72ag"]
+[gd_scene load_steps=6 format=3 uid="uid://btig2n7gr72ag"]
 
 [ext_resource type="FontFile" uid="uid://dwlxv87wa56jo" path="res://fonts/Xolonium-Regular.ttf" id="1_8b7l0"]
 [ext_resource type="Script" uid="uid://bu82h7742gx8y" path="res://HUDScene/HUD.cs" id="1_khwu1"]
+[ext_resource type="PackedScene" uid="uid://6lnlwrplq8ta" path="res://AnimatedLabelScene/AnimatedLabel.tscn" id="3_lent8"]
 
 [sub_resource type="InputEventAction" id="InputEventAction_4kthk"]
 action = &"start_game"
@@ -26,7 +27,7 @@ text = "00000"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="HighScoreLabel" type="Label" parent="."]
+[node name="HighScoreAnimatedLabel" parent="." instance=ExtResource("3_lent8")]
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -37,20 +38,13 @@ offset_top = -49.0
 offset_right = 71.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_fonts/font = ExtResource("1_8b7l0")
-theme_override_font_sizes/font_size = 40
 text = "00000"
-horizontal_alignment = 1
-vertical_alignment = 1
 
-[node name="HealthLabel" type="Label" parent="."]
+[node name="HealthAnimatedLabel" parent="." instance=ExtResource("3_lent8")]
 offset_left = 5.0
 offset_right = 158.0
 offset_bottom = 49.0
-theme_override_fonts/font = ExtResource("1_8b7l0")
-theme_override_font_sizes/font_size = 40
 text = "3/3 HP"
-vertical_alignment = 1
 
 [node name="Message" type="Label" parent="."]
 anchors_preset = 8
@@ -71,6 +65,25 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
+[node name="HighScoreBeatenMessage" type="Label" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -240.0
+offset_top = -124.0
+offset_right = 240.0
+offset_bottom = -80.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("1_8b7l0")
+theme_override_font_sizes/font_size = 30
+text = "New High Score! Congrats!"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
 [node name="StartButton" type="Button" parent="."]
 anchors_preset = 7
 anchor_left = 0.5
@@ -83,14 +96,34 @@ offset_right = 100.0
 offset_bottom = -150.0
 grow_horizontal = 2
 grow_vertical = 0
+mouse_default_cursor_shape = 2
 theme_override_fonts/font = ExtResource("1_8b7l0")
 theme_override_font_sizes/font_size = 64
 shortcut = SubResource("Shortcut_q0vrd")
 text = "Start"
 
+[node name="ClearHighScoreButton" type="Button" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -31.0
+offset_top = -81.0
+offset_right = 31.0
+offset_bottom = -48.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_default_cursor_shape = 2
+theme_override_fonts/font = ExtResource("1_8b7l0")
+theme_override_font_sizes/font_size = 20
+text = "Clear"
+
 [node name="MessageTimer" type="Timer" parent="."]
 wait_time = 2.0
 one_shot = true
 
+[connection signal="FlashAnimationFinished" from="HighScoreAnimatedLabel" to="." method="OnHighScoreFlashAnimationFinished"]
 [connection signal="pressed" from="StartButton" to="." method="OnStartButtonPressed"]
+[connection signal="pressed" from="ClearHighScoreButton" to="." method="OnClearButtonPressed"]
 [connection signal="timeout" from="MessageTimer" to="." method="OnMessageTimerTimeout"]

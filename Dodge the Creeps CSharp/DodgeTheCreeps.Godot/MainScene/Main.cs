@@ -13,8 +13,8 @@ public partial class Main : Node
 
   public override void _Ready()
   {
-    if (MobScene is null) throw new ScenePropertyNotInitializedException<PackedScene>(Name, nameof(MobScene));
     _nodes = new(this);
+    if (MobScene is null) throw new ScenePropertyNotInitializedException<PackedScene>(Name, nameof(MobScene));
   }
 
   private void NewGame()
@@ -26,7 +26,8 @@ public partial class Main : Node
     _nodes.StartTimer.Start();
 
     _nodes.HUDInstance.UpdateScore(_score);
-    _nodes.HUDInstance.UpdateHealth(_nodes.PlayerInstance.StartingHealth, _nodes.PlayerInstance.StartingHealth);
+    _nodes.HUDInstance.ClearHighlighting();
+    _nodes.HUDInstance.InitializeHealth(_nodes.PlayerInstance.StartingHealth, _nodes.PlayerInstance.StartingHealth);
     _nodes.HUDInstance.ShowMessage("Get Ready!");
 
     GetTree().CallGroup(MobSceneGroups.Mobs.Name, Node.MethodName.QueueFree);
@@ -42,14 +43,21 @@ public partial class Main : Node
 
     _nodes.Music.Stop();
     _nodes.DeathSound.Play();
+    bool highScoreBeaten = _nodes.HighScore.Beaten(_score);
     // We want the HUD to asynchronously do things while we continue, so we don't declare this signal handler
     // as "async void" and do not "await" this async method call.
-    _ = _nodes.HUDInstance.ShowGameOverAsync();
-    if (_score > _nodes.HighScore.Value)
+    _ = _nodes.HUDInstance.ShowGameOverAsync(highScoreBeaten);
+
+    if (highScoreBeaten)
     {
-      _nodes.HUDInstance.UpdateHighScore(_score);
       _nodes.HighScore.SaveHighScore(_score);
     }
+  }
+
+  private void ClearHighScore()
+  {
+    _nodes.HighScore.Clear();
+    _nodes.HUDInstance.UpdateHighScore(_nodes.HighScore.Value);
   }
 
   // ReSharper disable once AsyncVoidMethod (Signal handler must be async void)
@@ -69,7 +77,12 @@ public partial class Main : Node
   private void OnScoreTimerTimeout()
   {
     _score++;
-    _nodes.HUDInstance.UpdateScore(_score);
+    bool highScoreBeaten = _nodes.HighScore.Beaten(_score);
+    _nodes.HUDInstance.UpdateScore(_score, highScoreBeaten);
+    if (highScoreBeaten)
+    {
+      _nodes.HUDInstance.UpdateHighScore(_score, true);
+    }
   }
 
   private void OnMobTimerTimeout()
