@@ -9,7 +9,8 @@
     <ProjectReference Include="..\DodgeTheCreeps.Core\DodgeTheCreeps.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="MainScene\Main.tscn" />
+    <!-- Don't include the Main scene, as its file contains too much for the IDE to handle. -->
+    <!-- <None Include="MainScene\Main.tscn" /> -->
     <None Include="HUDScene\HUD.tscn" />
     <None Include="MobScene\Mob.tscn" />
     <None Include="PlayerScene\Player.tscn" />

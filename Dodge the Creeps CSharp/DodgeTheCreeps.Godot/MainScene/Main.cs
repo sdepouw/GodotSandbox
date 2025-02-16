@@ -40,7 +40,7 @@ public partial class Main : Node
     _nodes.HUDInstance.UpdateScore(_score);
     _nodes.HUDInstance.ShowMessage("Get Ready!");
 
-    GetTree().CallGroup("mobs", Node.MethodName.QueueFree);
+    GetTree().CallGroup(MobSceneGroups.Mobs.Name, Node.MethodName.QueueFree);
     _nodes.Music.Play();
   }
 

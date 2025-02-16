@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using DodgeTheCreeps.MobScene;
 using Godot;
 
 namespace DodgeTheCreeps.PlayerScene;
@@ -8,7 +10,7 @@ public partial class Player : Area2D
   /// <summary>
   /// Emitted when a hit is taken.
   /// </summary>
-  [Signal] public delegate void HitEventHandler();
+  [Signal] public delegate void HitEventHandler(int oldHealth, int currentHealth);
   /// <summary>
   /// Emitted when the Player dies.
   /// </summary>
@@ -22,6 +24,10 @@ public partial class Player : Area2D
   /// How many hits the player can take before dying.
   /// </summary>
   [Export] public int StartingHealth { get; set; } = 3;
+  /// <summary>
+  /// The length of time the player is invulnerable when taking damage.
+  /// </summary>
+  [Export] public double InvulnerabilityOnHitTime { get; set; } = 1.0;
 
   /// <summary>
   /// Size of the game window
@@ -34,15 +40,37 @@ public partial class Player : Area2D
   private PlayerNodes _nodes = null!;
 
   private int _currentHealth;
+  private bool _playerIsDead;
+  private bool _playerIsInvulnerable;
 
   public override void _Ready()
   {
-    _screenSize = GetViewportRect().Size;
     _nodes = new(this);
+    _screenSize = GetViewportRect().Size;
+    _nodes.TakingDamageAnimationTimer.WaitTime = InvulnerabilityOnHitTime;
     Hide();
   }
 
   public override void _Process(double delta)
+  {
+    MovePlayer(delta);
+    if (GetOverlappingBodies().Any(body => body.IsInGroup(MobSceneGroups.Mobs.Name)))
+    {
+      TryTakeDamage();
+    }
+  }
+  
+  public void Start(Vector2 position)
+  {
+    _currentHealth = StartingHealth;
+    _playerIsDead = false;
+    _playerIsInvulnerable = false;
+    _nodes.PlayerCollisionShape.Disabled = false;
+    Position = position;
+    Show();
+  }
+
+  private void MovePlayer(double delta)
   {
     Vector2 velocity = Vector2.Zero; // The player's movement vector.
 
@@ -66,11 +94,11 @@ public partial class Player : Area2D
     if (velocity.Length() > 0)
     {
       velocity = velocity.Normalized() * Speed;
-      _nodes.AnimatedSprite2D.Play();
+      _nodes.PlayerSprite.Play();
     }
     else
     {
-      _nodes.AnimatedSprite2D.Stop();
+      _nodes.PlayerSprite.Stop();
     }
 
     Position += velocity * (float)delta;
@@ -78,34 +106,49 @@ public partial class Player : Area2D
 
     if (velocity.X != 0)
     {
-      _nodes.AnimatedSprite2D.Animation = "walk";
-      _nodes.AnimatedSprite2D.FlipV = false;
-      _nodes.AnimatedSprite2D.FlipH = velocity.X < 0;
+      _nodes.PlayerSprite.Animation = "walk";
+      _nodes.PlayerSprite.FlipV = false;
+      _nodes.PlayerSprite.FlipH = velocity.X < 0;
     }
     else if (velocity.Y != 0)
     {
-      _nodes.AnimatedSprite2D.Animation = "up";
-      _nodes.AnimatedSprite2D.FlipV = velocity.Y > 0;
+      _nodes.PlayerSprite.Animation = "up";
+      _nodes.PlayerSprite.FlipV = velocity.Y > 0;
     }
   }
 
-  private void OnBodyEntered(Node2D _)
+  private void TryTakeDamage(int damage = 1)
   {
-    _currentHealth = Math.Max(_currentHealth - 1, 0);
-    if (_currentHealth > 0) return;
-    
-    // TODO: Make player blink and be invulnerable during that time.
-    Hide(); // Player disappears after dying.
-    EmitSignal(SignalName.Death);
-    // Must be deferred as we can't change physics properties on a physics callback.
-    _nodes.CollisionShape2D.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+    if (_playerIsDead || _playerIsInvulnerable) return;
+    int oldHealth = _currentHealth;
+    _currentHealth = Math.Clamp(_currentHealth - damage, 0, StartingHealth);
+    EmitSignalHit(oldHealth, _currentHealth);
+    if (_currentHealth == 0)
+    {
+      EmitSignalDeath();
+    }
+    else
+    {
+      _playerIsInvulnerable = true;
+      _nodes.PlayerDamagedSound.Play();
+      _nodes.TakingDamageAnimation.Play("take_damage");
+      _nodes.TakingDamageAnimationTimer.Start();
+    }
   }
 
-  public void Start(Vector2 position)
+  private void OnTakingDamageAnimationTimerTimeout()
   {
-    _currentHealth = StartingHealth;
-    Position = position;
-    Show();
-    _nodes.CollisionShape2D.Disabled = false;
+    _playerIsInvulnerable = false;
+    _nodes.TakingDamageAnimation.Play("RESET");
+  }
+
+  private void OnDeath()
+  {
+    _playerIsDead = true;
+    // TODO: Must this be deferred now? OnDeath is not a physics callback. Let's try.
+    _nodes.PlayerCollisionShape.Disabled = true;
+    // Must be deferred as we can't change physics properties on a physics callback.
+    //_nodes.CollisionShape2D.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+    Hide();
   }
 }
