@@ -7,6 +7,11 @@
 	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="GodotSharp" Version="4.4.0-beta.3" />
+    <PackageReference Include="Shouldly" Version="4.3.0" />
     <PackageReference Include="TUnit" Version="0.12.25" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DodgeTheCreeps.Core\DodgeTheCreeps.Core.csproj" />
   </ItemGroup>
 </Project>

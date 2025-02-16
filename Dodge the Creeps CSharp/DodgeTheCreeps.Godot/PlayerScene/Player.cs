@@ -20,7 +20,7 @@ public partial class Player : Area2D
 
   /// <summary>
   /// How fast the player will move (pixels/sec).
-  /// </summary>(PropertyHint.Range, "1, 10")
+  /// </summary>
   [Export] public int Speed { get; set; } = 400;
   /// <summary>
   /// How many hits the player can take before dying.
