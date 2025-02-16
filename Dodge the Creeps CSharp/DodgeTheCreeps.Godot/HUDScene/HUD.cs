@@ -1,10 +1,12 @@
 using System.Threading.Tasks;
+using DodgeTheCreeps.Core.Extensions;
 using Godot;
 
 namespace DodgeTheCreeps.HUDScene;
 
 public partial class HUD : CanvasLayer
 {
+  [Export] public Color ScoreHighlightColor { get; set; } = Colors.Green;
   [Signal] public delegate void StartGameEventHandler();
 
   private string _defaultMessageText = "";
@@ -56,8 +58,17 @@ public partial class HUD : CanvasLayer
     _nodes.HealthLabel.Text = $"{health}/{maxHealth} HP";
   }
 
-  public void UpdateScore(int score) => _nodes.ScoreLabel.Text = score.ToString("D5");
-  public void UpdateHighScore(int highScore) => _nodes.HighScoreLabel.Text = highScore.ToString("D5");
+  public void UpdateScore(int score, bool highlight = false)
+  {
+    _nodes.ScoreLabel.Text = score.ToString("D5");
+    _nodes.ScoreLabel.ApplyHighlight(highlight, ScoreHighlightColor);
+  }
+
+  public void UpdateHighScore(int highScore, bool highlight = false)
+  {
+    _nodes.HighScoreLabel.Text = highScore.ToString("D5");
+    _nodes.HighScoreLabel.ApplyHighlight(highlight, ScoreHighlightColor);
+  }
 
   private void OnStartButtonPressed()
   {
@@ -67,4 +78,10 @@ public partial class HUD : CanvasLayer
   }
 
   private void OnMessageTimerTimeout() => _nodes.Message.Hide();
+
+  public void ClearHighlighting()
+  {
+    _nodes.ScoreLabel.ClearHighlight();
+    _nodes.HighScoreLabel.ClearHighlight();
+  }
 }

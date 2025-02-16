@@ -26,6 +26,7 @@ public partial class Main : Node
     _nodes.StartTimer.Start();
 
     _nodes.HUDInstance.UpdateScore(_score);
+    _nodes.HUDInstance.ClearHighlighting();
     _nodes.HUDInstance.UpdateHealth(_nodes.PlayerInstance.StartingHealth, _nodes.PlayerInstance.StartingHealth);
     _nodes.HUDInstance.ShowMessage("Get Ready!");
 
@@ -45,9 +46,8 @@ public partial class Main : Node
     // We want the HUD to asynchronously do things while we continue, so we don't declare this signal handler
     // as "async void" and do not "await" this async method call.
     _ = _nodes.HUDInstance.ShowGameOverAsync();
-    if (_score > _nodes.HighScore.Value)
+    if (_nodes.HighScore.Beaten(_score))
     {
-      _nodes.HUDInstance.UpdateHighScore(_score);
       _nodes.HighScore.SaveHighScore(_score);
     }
   }
@@ -69,11 +69,11 @@ public partial class Main : Node
   private void OnScoreTimerTimeout()
   {
     _score++;
-    _nodes.HUDInstance.UpdateScore(_score);
-    if (_score > _nodes.HighScore.Value)
+    bool highScoreBeaten = _nodes.HighScore.Beaten(_score);
+    _nodes.HUDInstance.UpdateScore(_score, highScoreBeaten);
+    if (highScoreBeaten)
     {
-      // TODO: Score and/or High Score label should be tinted green
-      _nodes.HUDInstance.UpdateHighScore(_score);
+      _nodes.HUDInstance.UpdateHighScore(_score, true);
     }
   }
 
