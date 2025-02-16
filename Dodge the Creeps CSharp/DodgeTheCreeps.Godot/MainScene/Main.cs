@@ -13,8 +13,8 @@ public partial class Main : Node
 
   public override void _Ready()
   {
-    if (MobScene is null) throw new ScenePropertyNotInitializedException<PackedScene>(Name, nameof(MobScene));
     _nodes = new(this);
+    if (MobScene is null) throw new ScenePropertyNotInitializedException<PackedScene>(Name, nameof(MobScene));
   }
 
   private void NewGame()
@@ -70,6 +70,11 @@ public partial class Main : Node
   {
     _score++;
     _nodes.HUDInstance.UpdateScore(_score);
+    if (_score > _nodes.HighScore.Value)
+    {
+      // TODO: Score and/or High Score label should be tinted green
+      _nodes.HUDInstance.UpdateHighScore(_score);
+    }
   }
 
   private void OnMobTimerTimeout()

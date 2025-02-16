@@ -13,13 +13,6 @@ public partial class HighScore : Node
 
   [Signal] public delegate void LoadedEventHandler(int highScore);
 
-  public void SaveHighScore(int newHighScore)
-  {
-    Value = newHighScore;
-    using FileAccess saveFile = FileAccess.Open(SaveDataLocation, FileAccess.ModeFlags.Write);
-    saveFile.Store32((uint)Value);
-  }
-
   public override void _Ready()
   {
     if (LoadHighScore())
@@ -27,6 +20,15 @@ public partial class HighScore : Node
       EmitSignalLoaded(Value);
     }
   }
+  
+  public void SaveHighScore(int newHighScore)
+  {
+    Value = newHighScore;
+    using FileAccess saveFile = FileAccess.Open(SaveDataLocation, FileAccess.ModeFlags.Write);
+    saveFile.Store32((uint)Value);
+  }
+
+  public void Clear() => SaveHighScore(0);
 
   private bool LoadHighScore()
   {
