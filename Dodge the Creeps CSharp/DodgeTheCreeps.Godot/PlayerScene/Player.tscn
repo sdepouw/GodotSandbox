@@ -1,7 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://dgtxkop6maxov"]
+[gd_scene load_steps=13 format=3 uid="uid://dgtxkop6maxov"]
 
 [ext_resource type="Script" uid="uid://b176b7a0enndx" path="res://PlayerScene/Player.cs" id="1_886pi"]
 [ext_resource type="Texture2D" uid="uid://bnaq457w1hmmx" path="res://art/playerGrey_up1.png" id="1_j6xu3"]
+[ext_resource type="Texture2D" uid="uid://bncfi6x4cdt71" path="res://art/playerHurt.png" id="2_cpokm"]
 [ext_resource type="Texture2D" uid="uid://bixwe4jvcm45j" path="res://art/playerGrey_up2.png" id="2_hp7pc"]
 [ext_resource type="Texture2D" uid="uid://cy4557tewi75k" path="res://art/playerGrey_walk1.png" id="3_xq871"]
 [ext_resource type="Texture2D" uid="uid://7dlayu82rsgd" path="res://art/playerGrey_walk2.png" id="4_l0y1u"]
@@ -9,6 +10,14 @@
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_cbubk"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_cpokm")
+}],
+"loop": true,
+"name": &"hurt",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("1_j6xu3")

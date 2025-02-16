@@ -47,7 +47,7 @@ public partial class HUD : CanvasLayer
     _nodes.HealthAnimatedLabelInstance.Hide();
     ShowMessage(_defaultMessageText, false);
 
-    await ToSignal(GetTree().CreateTimer(1.0), SceneTreeTimer.SignalName.Timeout);
+    await this.OneShotTimer(1.0);
     _nodes.StartButton.Show();
     _nodes.ClearHighScoreButton.Show();
   }

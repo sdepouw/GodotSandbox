@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+using DodgeTheCreeps.Core.Extensions;
 using DodgeTheCreeps.MobScene;
 using Godot;
 
@@ -18,12 +20,12 @@ public partial class Player : Area2D
 
   /// <summary>
   /// How fast the player will move (pixels/sec).
-  /// </summary>
+  /// </summary>(PropertyHint.Range, "1, 10")
   [Export] public int Speed { get; set; } = 400;
   /// <summary>
   /// How many hits the player can take before dying.
   /// </summary>
-  [Export] public int StartingHealth { get; set; } = 3;
+  [Export(PropertyHint.Range, "1,999")] public int StartingHealth { get; set; } = 3;
   /// <summary>
   /// The length of time the player is invulnerable when taking damage.
   /// </summary>
@@ -70,8 +72,20 @@ public partial class Player : Area2D
     Show();
   }
 
+  private bool _stunlocked;
+  public async Task GotHitAsync()
+  {
+    _stunlocked = true;
+    StringName previousAnimation = _nodes.PlayerSprite.Animation;
+    _nodes.PlayerSprite.Animation = "hurt";
+    await this.OneShotTimer(0.5);
+    _nodes.PlayerSprite.Animation = previousAnimation;
+    _stunlocked = false;
+  }
+
   private void MovePlayer(double delta)
   {
+    if (_stunlocked) return;
     Vector2 velocity = Vector2.Zero; // The player's movement vector.
 
     if (InputAction.Right.IsActionPressed())

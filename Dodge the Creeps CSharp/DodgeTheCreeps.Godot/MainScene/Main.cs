@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using DodgeTheCreeps.Core.Exceptions;
 using DodgeTheCreeps.MobScene;
 using Godot;
@@ -34,7 +35,12 @@ public partial class Main : Node
     _nodes.Music.Play();
   }
 
-  private void OnHit(int _, int newHealth) => _nodes.HUDInstance.UpdateHealth(newHealth);
+  // ReSharper disable once UnusedParameter.Local (must maintain signature for signal to emit to it)
+  private void OnHit(int oldHealth, int newHealth)
+  {
+    _nodes.HUDInstance.UpdateHealth(newHealth);
+    _ = _nodes.PlayerInstance.GotHitAsync();
+  }
 
   private void GameOver()
   {
