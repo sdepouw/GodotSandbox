@@ -27,7 +27,7 @@ public partial class Main : Node
 
     _nodes.HUDInstance.UpdateScore(_score);
     _nodes.HUDInstance.ClearHighlighting();
-    _nodes.HUDInstance.UpdateHealth(_nodes.PlayerInstance.StartingHealth, _nodes.PlayerInstance.StartingHealth);
+    _nodes.HUDInstance.InitializeHealth(_nodes.PlayerInstance.StartingHealth, _nodes.PlayerInstance.StartingHealth);
     _nodes.HUDInstance.ShowMessage("Get Ready!");
 
     GetTree().CallGroup(MobSceneGroups.Mobs.Name, Node.MethodName.QueueFree);

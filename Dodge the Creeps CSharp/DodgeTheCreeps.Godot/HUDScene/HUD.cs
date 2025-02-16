@@ -51,17 +51,16 @@ public partial class HUD : CanvasLayer
     _nodes.ClearHighScoreButton.Show();
   }
 
-  public void UpdateHealth(int health, int? maxHealth = null)
+  public void InitializeHealth(int health, int maxHealth)
   {
-    if (maxHealth.HasValue)
-    {
-      _maxHealth = maxHealth.Value;
-    }
-    else
-    {
-      maxHealth = _maxHealth;
-    }
+    _maxHealth = maxHealth;
     _nodes.HealthLabelInstance.Text = $"{health}/{maxHealth} HP";
+  }
+
+  public void UpdateHealth(int health)
+  {
+    InitializeHealth(health, _maxHealth);
+    _nodes.HealthLabelInstance.ShakeRed();
   }
 
   public void UpdateScore(int score, bool highlight = false)
@@ -94,7 +93,7 @@ public partial class HUD : CanvasLayer
   private void OnClearButtonPressed()
   {
     ClearHighlighting();
-    // TODO: Flash red (turn red, then fade back to the normal color).
+    _nodes.HighScoreLabelInstance.ShakeRed();
     EmitSignalClearHighScore();
   }
 

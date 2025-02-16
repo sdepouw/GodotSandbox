@@ -1,9 +1,55 @@
-[gd_scene load_steps=3 format=3 uid="uid://6lnlwrplq8ta"]
+[gd_scene load_steps=6 format=3 uid="uid://6lnlwrplq8ta"]
 
 [ext_resource type="FontFile" uid="uid://dwlxv87wa56jo" path="res://fonts/Xolonium-Regular.ttf" id="1_epcw2"]
 [ext_resource type="Script" uid="uid://cra5y3qrx58qt" path="res://AnimatedLabelScene/AnimatedLabel.cs" id="1_tqihu"]
 
+[sub_resource type="Animation" id="Animation_j1e6w"]
+length = 0.001
+capture_included = true
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:theme_override_colors/font_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 2,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_epcw2"]
+resource_name = "shake_red"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:theme_override_colors/font_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 0, 0, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_10pu5"]
+_data = {
+&"RESET": SubResource("Animation_j1e6w"),
+&"shake_red": SubResource("Animation_epcw2")
+}
+
 [node name="AnimatedLabel" type="Label"]
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("1_epcw2")
 theme_override_font_sizes/font_size = 40
 script = ExtResource("1_tqihu")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_10pu5")
+}
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="OnAnimationFinished"]
