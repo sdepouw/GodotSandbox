@@ -41,6 +41,7 @@ public partial class HUD : CanvasLayer
     {
       _nodes.HighScoreBeatenMessage.Show();
     }
+    _nodes.HealthAnimatedLabelInstance.StopBlinking();
     ShowMessage("Game Over");
     await ToSignal(_nodes.MessageTimer, Timer.SignalName.Timeout);
     _nodes.HealthAnimatedLabelInstance.Hide();
@@ -61,6 +62,10 @@ public partial class HUD : CanvasLayer
   {
     InitializeHealth(health, _maxHealth);
     _nodes.HealthAnimatedLabelInstance.ShakeRed();
+    if (health <= 1)
+    {
+      _nodes.HealthAnimatedLabelInstance.BlinkContinuously();
+    }
   }
 
   public void UpdateScore(int score, bool highlight = false)
@@ -100,5 +105,5 @@ public partial class HUD : CanvasLayer
 
   private void OnMessageTimerTimeout() => _nodes.Message.Hide();
   
-  private void OnHighScoreAnimationFinished() => _nodes.ClearHighScoreButton.SetDisabled(false);
+  private void OnHighScoreFlashAnimationFinished() => _nodes.ClearHighScoreButton.SetDisabled(false);
 }

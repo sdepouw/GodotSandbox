@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://6lnlwrplq8ta"]
+[gd_scene load_steps=7 format=3 uid="uid://6lnlwrplq8ta"]
 
 [ext_resource type="FontFile" uid="uid://dwlxv87wa56jo" path="res://fonts/Xolonium-Regular.ttf" id="1_epcw2"]
 [ext_resource type="Script" uid="uid://cra5y3qrx58qt" path="res://AnimatedLabelScene/AnimatedLabel.cs" id="1_tqihu"]
@@ -35,9 +35,27 @@ tracks/0/keys = {
 "values": [Color(1, 0, 0, 1), Color(1, 1, 1, 1)]
 }
 
+[sub_resource type="Animation" id="Animation_10pu5"]
+resource_name = "blink"
+length = 0.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:theme_override_colors/font_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [Color(0.999961, 0.628012, 0.571385, 1), Color(1, 1, 1, 1)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_10pu5"]
 _data = {
 &"RESET": SubResource("Animation_j1e6w"),
+&"blink": SubResource("Animation_10pu5"),
 &"flash_red": SubResource("Animation_epcw2")
 }
 
@@ -45,6 +63,7 @@ _data = {
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("1_epcw2")
 theme_override_font_sizes/font_size = 40
+text = "asdf"
 script = ExtResource("1_tqihu")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]

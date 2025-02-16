@@ -4,18 +4,22 @@ namespace DodgeTheCreeps.AnimatedLabelScene;
 
 public partial class AnimatedLabel : Label
 {
-  [Signal] public delegate void AnimationFinishedEventHandler();
+  [Signal] public delegate void FlashAnimationFinishedEventHandler();
 
   private AnimatedLabelNodes _nodes = null!;
-  private const string AnimationName = "flash_red";
+  private const string FlashRedAnimationName = "flash_red";
+  private const string BlinkAnimationName = "blink";
 
   public override void _Ready() => _nodes = new(this);
 
   public void ShakeRed()
   {
-    _nodes.AnimationPlayer.Play(AnimationName);
+    _nodes.AnimationPlayer.Play(FlashRedAnimationName);
     Shake();
   }
+
+  public void BlinkContinuously() => _nodes.AnimationPlayer.Play(BlinkAnimationName);
+  public void StopBlinking() => _nodes.AnimationPlayer.Play("RESET");
 
   private void Shake()
   {
@@ -32,10 +36,10 @@ public partial class AnimatedLabel : Label
 
   private void OnAnimationFinished(string name)
   {
-    if (name == AnimationName)
+    if (name == FlashRedAnimationName)
     {
       _nodes.AnimationPlayer.Play("RESET");
-      EmitSignalAnimationFinished();
+      EmitSignalFlashAnimationFinished();
     }
   }
 }
