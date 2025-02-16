@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://db3mvim78fu3w"]
+[gd_scene load_steps=11 format=3 uid="uid://db3mvim78fu3w"]
 
 [ext_resource type="Texture2D" uid="uid://gxofw75uhppv" path="res://art/enemyFlyingAlt_1.png" id="1_4gbj4"]
 [ext_resource type="Script" uid="uid://vaoqubt4oykp" path="res://MobScene/Mob.cs" id="1_qjrj5"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://c82muyqa2wgwh" path="res://art/enemySwimming_2.png" id="4_nfqqo"]
 [ext_resource type="Texture2D" uid="uid://dfwwec1t1lag5" path="res://art/enemyWalking_1.png" id="5_873x3"]
 [ext_resource type="Texture2D" uid="uid://bymhbsl8yfjop" path="res://art/enemyWalking_2.png" id="6_dlbsx"]
+[ext_resource type="AnimationLibrary" uid="uid://decbqydflf60s" path="res://art/Sprite Take Damage.res" id="8_3rtjr"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_n5cd0"]
 animations = [{
@@ -66,5 +67,10 @@ rotation = 1.5708
 shape = SubResource("CapsuleShape2D_3umde")
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+
+[node name="DestroyedAnimation" type="AnimationPlayer" parent="."]
+libraries = {
+&"Sprite Take Damage": ExtResource("8_3rtjr")
+}
 
 [connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="OnVisibleOnScreenNotifier2DScreenExited"]

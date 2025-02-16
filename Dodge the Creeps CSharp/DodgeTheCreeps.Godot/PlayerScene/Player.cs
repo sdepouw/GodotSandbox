@@ -44,6 +44,7 @@ public partial class Player : Area2D
   private int _currentHealth;
   private bool _playerIsDead;
   private bool _playerIsInvulnerable;
+  private bool _playerIsStunlocked;
 
   public override void _Ready()
   {
@@ -56,9 +57,9 @@ public partial class Player : Area2D
   public override void _Process(double delta)
   {
     MovePlayer(delta);
-    if (GetOverlappingBodies().Any(body => body.IsInGroup(MobSceneGroups.Mobs.Name)))
+    if (GetOverlappingBodies().FirstOrDefault(body => body.IsInGroup(MobSceneGroups.Mobs.Name)) is Mob mobHittingPlayer)
     {
-      TryTakeDamage();
+      TryTakeDamage(mobHittingPlayer);
     }
   }
 
@@ -71,21 +72,20 @@ public partial class Player : Area2D
     Position = position;
     Show();
   }
-
-  private bool _stunlocked;
+  
   public async Task GotHitAsync()
   {
-    _stunlocked = true;
+    _playerIsStunlocked = true;
     StringName previousAnimation = _nodes.PlayerSprite.Animation;
     _nodes.PlayerSprite.Animation = "hurt";
     await this.OneShotTimer(0.5);
     _nodes.PlayerSprite.Animation = previousAnimation;
-    _stunlocked = false;
+    _playerIsStunlocked = false;
   }
 
   private void MovePlayer(double delta)
   {
-    if (_stunlocked) return;
+    if (_playerIsStunlocked) return;
     Vector2 velocity = Vector2.Zero; // The player's movement vector.
 
     if (InputAction.Right.IsActionPressed())
@@ -131,11 +131,12 @@ public partial class Player : Area2D
     }
   }
 
-  private void TryTakeDamage(int damage = 1)
+  private void TryTakeDamage(Mob mobHittingPlayer, int damage = 1)
   {
     if (_playerIsDead || _playerIsInvulnerable) return;
     int oldHealth = _currentHealth;
     _currentHealth = Math.Clamp(_currentHealth - damage, 0, StartingHealth);
+    _ = mobHittingPlayer.HitPlayerAsync();
     EmitSignalHit(oldHealth, _currentHealth);
     if (_currentHealth == 0)
     {
@@ -145,7 +146,7 @@ public partial class Player : Area2D
     {
       _playerIsInvulnerable = true;
       _nodes.PlayerDamagedSound.Play();
-      _nodes.TakingDamageAnimation.Play("take_damage");
+      _nodes.TakingDamageAnimation.Play("Sprite Take Damage/take_damage");
       _nodes.TakingDamageAnimationTimer.Start();
     }
   }
@@ -153,13 +154,13 @@ public partial class Player : Area2D
   private void OnTakingDamageAnimationTimerTimeout()
   {
     _playerIsInvulnerable = false;
-    _nodes.TakingDamageAnimation.Play("RESET");
+    _nodes.TakingDamageAnimation.Play("Sprite Take Damage/RESET");
   }
 
   private void OnDeath()
   {
     _playerIsDead = true;
-    _nodes.PlayerCollisionShape.Disabled = true;
+    _nodes.PlayerCollisionShape.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
     Hide();
   }
 }
