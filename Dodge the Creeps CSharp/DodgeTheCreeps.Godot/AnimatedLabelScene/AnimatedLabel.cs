@@ -7,12 +7,13 @@ public partial class AnimatedLabel : Label
   [Signal] public delegate void AnimationFinishedEventHandler();
 
   private AnimatedLabelNodes _nodes = null!;
+  private const string AnimationName = "flash_red";
 
   public override void _Ready() => _nodes = new(this);
 
   public void ShakeRed()
   {
-    _nodes.AnimationPlayer.Play("shake_red");
+    _nodes.AnimationPlayer.Play(AnimationName);
     Shake();
   }
 
@@ -31,7 +32,7 @@ public partial class AnimatedLabel : Label
 
   private void OnAnimationFinished(string name)
   {
-    if (name == "shake_red")
+    if (name == AnimationName)
     {
       _nodes.AnimationPlayer.Play("RESET");
       EmitSignalAnimationFinished();
