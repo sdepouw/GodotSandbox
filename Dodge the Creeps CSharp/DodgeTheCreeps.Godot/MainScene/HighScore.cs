@@ -27,7 +27,7 @@ public partial class HighScore : Node
       EmitSignalLoaded(Value);
     }
   }
-  
+
   private bool LoadHighScore()
   {
     if (!FileAccess.FileExists(SaveDataLocation)) return false;

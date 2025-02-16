@@ -9,7 +9,7 @@ public record MainNodes
 {
   public readonly Player PlayerInstance;
   public readonly HUD HUDInstance;
-  
+
   public readonly Timer MobTimer;
   public readonly Timer ScoreTimer;
   public readonly Timer StartTimer;
@@ -24,7 +24,7 @@ public record MainNodes
   {
     PlayerInstance = mainNode.GetNodeSafe<Player>("Player");
     HUDInstance = mainNode.GetNodeSafe<HUD>("HUD");
-    
+
     MobTimer = mainNode.GetNodeSafe<Timer>("MobTimer");
     ScoreTimer = mainNode.GetNodeSafe<Timer>("ScoreTimer");
     StartTimer = mainNode.GetNodeSafe<Timer>("StartTimer");

@@ -16,7 +16,7 @@ public partial class Main : Node
     if (MobScene is null) throw new ScenePropertyNotInitializedException<PackedScene>(Name, nameof(MobScene));
     _nodes = new(this);
   }
-  
+
   private void NewGame()
   {
     _score = 0;

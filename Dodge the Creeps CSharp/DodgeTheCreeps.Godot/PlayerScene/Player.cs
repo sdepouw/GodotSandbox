@@ -59,7 +59,7 @@ public partial class Player : Area2D
       TryTakeDamage();
     }
   }
-  
+
   public void Start(Vector2 position)
   {
     _currentHealth = StartingHealth;

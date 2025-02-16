@@ -5,7 +5,7 @@ namespace DodgeTheCreeps.MobScene;
 public partial class Mob : RigidBody2D
 {
   private MobNodes _nodes = null!;
-  
+
   public override void _Ready()
   {
     _nodes = new(this);

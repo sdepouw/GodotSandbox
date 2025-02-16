@@ -12,7 +12,7 @@ public partial class HUD : CanvasLayer
   private HUDNodes _nodes = null!;
 
   private int _maxHealth = 0;
-  
+
   public override void _Ready()
   {
     _nodes = new(this);
@@ -27,7 +27,7 @@ public partial class HUD : CanvasLayer
 
     if (autoTimeout)
     {
-      _nodes.MessageTimer.Start();  
+      _nodes.MessageTimer.Start();
     }
   }
 
