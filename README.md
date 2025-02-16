@@ -31,3 +31,4 @@ Godot 4.4 runs .NET 8 for C# projects, instead of .NET 6.
 - Instead of one hit instant death, the player can now take multiple hits (3 by default)
   - Includes "take damage" sound
 - High Score is now maintained, and persists between play sessions
+- A few animations and colors applied dynamically
